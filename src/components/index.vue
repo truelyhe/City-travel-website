@@ -1,0 +1,370 @@
+<template>
+  <div class="content">
+    <Header/>
+    <div class="Promotional-language">
+      <h1>济河之南，泉水上城</h1>
+      <p>济南-一座饮着泉水成长的城市</p>
+    </div>
+    <div class="carousel">
+      <el-carousel :interval="4000" :autoplay="true" type="card" height="300px">
+        <el-carousel-item v-for="(item, index) in slideImages" :key="index">
+          <img :src="item.url"/>
+          <!-- <h3>{{ item }}</h3> -->
+        </el-carousel-item>
+      </el-carousel>
+    </div>
+    <div class="city-new-warp">
+      <div class="left">
+        <div class="decribe">
+          <span></span>
+          <p>城市要闻</p>
+        </div>
+        <ul>
+          <li>
+            <span>一条新闻</span>
+            <span>2019-02-07</span>
+          </li>
+          <li>
+            <span>一条新闻</span>
+            <span>2019-02-07</span>
+          </li>
+          <li>
+            <span>一条新闻</span>
+            <span>2019-02-07</span>
+          </li>
+          <li>
+            <span>一条新闻</span>
+            <span>2019-02-07</span>
+          </li>
+          <li>
+            <span>一条新闻</span>
+            <span>2019-02-07</span>
+          </li>
+          <li>
+            <span>一条新闻</span>
+            <span>2019-02-07</span>
+          </li>
+          <li>
+            <span>一条新闻</span>
+            <span>2019-02-07</span>
+          </li>
+          <li>
+            <span>一条新闻</span>
+            <span>2019-02-07</span>
+          </li>
+        </ul>
+      </div>
+      <div class="right">
+        <div class="decribe">
+          <span></span>
+          <p>通知公告</p>
+        </div>
+        <ul>
+          <li>
+            <span>一条新闻</span>
+            <span>2019-02-07</span>
+          </li>
+          <li>
+            <span>一条新闻</span>
+            <span>2019-02-07</span>
+          </li>
+          <li>
+            <span>一条新闻</span>
+            <span>2019-02-07</span>
+          </li>
+          <li>
+            <span>一条新闻</span>
+            <span>2019-02-07</span>
+          </li>
+          <li>
+            <span>一条新闻</span>
+            <span>2019-02-07</span>
+          </li>
+          <li>
+            <span>一条新闻</span>
+            <span>2019-02-07</span>
+          </li>
+          <li>
+            <span>一条新闻</span>
+            <span>2019-02-07</span>
+          </li>
+          <li>
+            <span>一条新闻</span>
+            <span>2019-02-07</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="recommand">
+      <div class="decribe">
+        <span></span>
+        <p>今日推荐</p>
+      </div>
+      <div class="recommand-list">
+        <el-row>
+          <el-col :span="8" v-for="(item, index) in articleList.slice(0, 3)" :key="index" :offset="index > 0 ? 2 : 0">
+            <el-card :body-style="{ padding: '0px' }">
+              <img src="http://pic1.win4000.com/wallpaper/6/57beb9d2bb240.jpg" class="image">
+              <div style="padding: 14px;">
+                <span @click="articleDetail( item._id )">{{ item.title }}</span>
+                <div class="bottom clearfix">
+                  <time class="time">{{ item.date }}</time>
+                  <el-button type="text" class="button">操作按钮</el-button>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
+    <!-- <div class="article_wrap" v-for="(item, index) in articleList" :key="index">
+      <div class="article_title" @click="articleDetail( item._id )">{{ item.title }}</div>
+      <div class="article_info">
+        <span class="article_info_date">发表于：{{ item.date }}</span>
+        <span class="article_info_label">标签：
+        <span v-if="item.labels.length === 0">未分类</span>
+        <el-tag v-else class="tag_margin" type="primary" v-for="tag in item.labels" :key=tag>{{ tag }}</el-tag>
+        </span>
+      </div>
+      <div class="article_gist">{{ item.gist }}</div>
+      <div @click="articleDetail( item._id )" class="article_button article_all">阅读全文 ></div>
+      <div class="article_underline"></div>
+    </div> -->
+    <Footer/>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+import Header from '@/base/header'
+import Footer from '@/base/footer'
+import { apiUrl } from '@/api/config'
+
+export default {
+  name: 'Article',
+  data () {
+    return {
+      currentDate: new Date(),
+      articleList: [],
+      slideImages: [
+        {
+          url: 'http://youimg1.c-ctrip.com/target/tg/712/129/064/6e60e07d3d254166ade6920a1335eedb.jpg'
+        },
+        {
+          url: 'http://img.pconline.com.cn/images/upload/upc/tx/itbbs/1707/10/c17/52350883_1499669354917_mthumb.jpg'
+        },
+        {
+          url: 'http://uploads.jy135.com/allimg/201705/16-1F503103457.jpg'
+        },
+        {
+          url: 'http://img.pconline.com.cn/images/upload/upc/tx/photoblog/1109/20/c0/9018070_9018070_1316483990187_mthumb.jpg'
+        },
+        {
+          url: 'http://img.pconline.com.cn/images/photoblog/1/1/2/1/11219768/20103/12/1268382752595_mthumb.jpg'
+        },
+        {
+          url: 'http://img.pconline.com.cn/images/upload/upc/tx/itbbs/1401/17/c10/30646639_1389938693914_mthumb.jpg'
+        }
+      ]
+    }
+  },
+  mounted: function () {
+    this.$http.get(apiUrl + '/api/articleList').then(
+      response => { this.articleList = response.body.reverse() },
+      response => console.log(response)
+    )
+  },
+  methods: {
+    articleDetail: function (id) {
+      // 这边不能多一个斜杠 '/articleDetail/'  因为router定义的路由是 '/articleDetail:id'
+      // 我把router改成 '/articleDetail/:id' 让前后端的路由规则一致
+      this.$router.push('/articleDetail/' + id)
+    }
+  },
+  components: {
+    Header,
+    Footer
+  }
+}
+</script>
+
+<style lang="stylus" rel="stylesheet/stylus">
+  .content {
+    .Promotional-language {
+      padding-top: 10px;
+      text-align: center;
+      p {
+        padding-left: 395px;
+      }
+    }
+    .carousel {
+      .el-carousel__item h3 {
+        color: #475669;
+        font-size: 14px;
+        opacity: 0.75;
+        line-height: 200px;
+        margin: 0;
+      }
+      .el-carousel__item img {
+       width: 100%;
+      }
+      .el-carousel__item:nth-child(2n) {
+        background-color: #99a9bf;
+      }
+      .el-carousel__item:nth-child(2n+1) {
+        background-color: #d3dce6;
+      }
+    }
+    .city-new-warp {
+      display: flex;
+      width: 100%;
+      text-align: left;
+      margin: 0 auto;
+      padding-top: 20px;
+      .left , .right {
+        width: 50%;
+        padding-left: 15px;
+        .decribe {
+          display: flex;
+          align-items: center;
+          padding-left: 15px;
+          span {
+            width: 8px;
+            height: 18px;
+            background: #409eff;
+            margin-right: 6px;
+          }
+          p {
+            margin: 0;
+            color: #409eff;
+          }
+        }
+        ul {
+          list-style: none;
+          margin: 15px;
+          background: #ffffff;
+          li {
+            display: flex;
+            padding: 10px;
+            font-size: 12px;
+            justify-content: space-between;
+          }
+        }
+      }
+    }
+    .recommand {
+      padding-bottom: 30px;
+      overflow: hidden;
+      .el-col, .el-col-8 {
+        width: 30%;
+      }
+      .el-col-offset-2 {
+        margin-left: 5%;
+      }
+      .decribe {
+        display: flex;
+        align-items: center;
+        padding-left: 15px;
+        margin: 15px;
+        span {
+          width: 8px;
+          height: 18px;
+          background: #409eff;
+          margin-right: 6px;
+        }
+        p {
+          margin: 0;
+          color: #409eff;
+        }
+      }
+      .recommand-list {
+        width: 1224px;
+        text-align: center;
+        margin: 0 auto;
+      }
+    }
+  }
+  .time {
+    font-size: 13px;
+    color: #999;
+  }
+  .bottom {
+    margin-top: 13px;
+    line-height: 12px;
+  }
+
+  .button {
+    padding: 0;
+    float: right;
+  }
+
+  .image {
+    width: 100%;
+    display: block;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+      display: table;
+      content: "";
+  }
+
+   .clearfix:after {
+      clear: both
+  }
+
+  .article_wrap {
+    padding: 40px;
+  }
+
+  .article_title {
+    display: inline-block;
+    color: #222;
+    font-size: 34px;
+    font-weight: 600;
+    border-bottom: 1px solid white;
+    cursor: pointer;
+  }
+
+  .article_title:hover {
+    border-bottom: 1px solid #222;
+  }
+
+  .article_info {
+    color: #999;
+    font-size: 14px;
+    padding-top: 8px;
+  }
+
+  .tag_margin {
+    margin: 3px;
+  }
+
+  .article_gist {
+    text-align: left;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    font-size: 16px;
+  }
+
+  .article_button {
+    display: inline-block;
+    padding: 3px 12px;
+    border: 2px solid #222;
+    color: #222;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .article_all:hover {
+    color: white;
+    background: #000;
+    font-weight: 600;
+  }
+
+  .article_underline {
+    height: 1px;
+    width: 40px;
+    background: #545455;
+    margin: 80px auto 0;
+  }
+</style>
