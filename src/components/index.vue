@@ -16,48 +16,26 @@
     <div class="city-new-warp">
       <div class="left">
         <div class="decribe">
-          <span></span>
-          <p>城市要闻</p>
+          <div class="decribe-left">
+            <span></span>
+            <p>城市要闻</p>
+          </div>
+          <div class="decribe-right">更多 >></div>
         </div>
         <ul>
-          <li>
-            <span>一条新闻</span>
-            <span>2019-02-07</span>
-          </li>
-          <li>
-            <span>一条新闻</span>
-            <span>2019-02-07</span>
-          </li>
-          <li>
-            <span>一条新闻</span>
-            <span>2019-02-07</span>
-          </li>
-          <li>
-            <span>一条新闻</span>
-            <span>2019-02-07</span>
-          </li>
-          <li>
-            <span>一条新闻</span>
-            <span>2019-02-07</span>
-          </li>
-          <li>
-            <span>一条新闻</span>
-            <span>2019-02-07</span>
-          </li>
-          <li>
-            <span>一条新闻</span>
-            <span>2019-02-07</span>
-          </li>
-          <li>
-            <span>一条新闻</span>
-            <span>2019-02-07</span>
+          <li v-for="(item, index) in newsList.slice(0, 8)" :key="index">
+            <span>{{item.title}}</span>
+            <span>{{item.date.split(' ')[0]}}</span>
           </li>
         </ul>
       </div>
       <div class="right">
         <div class="decribe">
-          <span></span>
-          <p>通知公告</p>
+          <div class="decribe-left">
+            <span></span>
+            <p>通知公告</p>
+          </div>
+         <div class="decribe-right">更多 >></div>
         </div>
         <ul>
           <li>
@@ -97,8 +75,11 @@
     </div>
     <div class="recommand">
       <div class="decribe">
-        <span></span>
-        <p>今日推荐</p>
+        <div class="decribe-left">
+          <span></span>
+          <p>今日推荐</p>
+        </div>
+        <div class="decribe-right">更多 >></div>
       </div>
       <div class="recommand-list">
         <el-row>
@@ -144,8 +125,9 @@ export default {
   data () {
     return {
       currentDate: new Date(),
-      articleList: [],
-      slideImages: [
+      newsList: [], // 新闻列表
+      articleList: [], // 推荐列表
+      slideImages: [ // 轮播图
         {
           url: 'http://youimg1.c-ctrip.com/target/tg/712/129/064/6e60e07d3d254166ade6920a1335eedb.jpg'
         },
@@ -153,7 +135,7 @@ export default {
           url: 'http://img.pconline.com.cn/images/upload/upc/tx/itbbs/1707/10/c17/52350883_1499669354917_mthumb.jpg'
         },
         {
-          url: 'http://uploads.jy135.com/allimg/201705/16-1F503103457.jpg'
+          url: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1552624612150&di=4d5ff23b6a78478e608b78824b748c04&imgtype=0&src=http%3A%2F%2Fs3.lvjs.com.cn%2Fuploads%2Fpc%2Fplace2%2F2016-10-25%2F5903fb5c-3b10-4bc3-accc-351f93d65584_1280_.jpg'
         },
         {
           url: 'http://img.pconline.com.cn/images/upload/upc/tx/photoblog/1109/20/c0/9018070_9018070_1316483990187_mthumb.jpg'
@@ -167,13 +149,28 @@ export default {
       ]
     }
   },
+  created () {
+  },
   mounted: function () {
-    this.$http.get(apiUrl + '/api/articleList').then(
-      response => { this.articleList = response.body.reverse() },
-      response => console.log(response)
-    )
+    this.getNewsListFn()
+    this.getArticleListFn()
   },
   methods: {
+    // 获取新闻列表
+    getNewsListFn () {
+      this.$http.get(apiUrl + '/api/newsList').then(
+        response => { this.newsList = response.body.reverse() },
+        response => console.log(response)
+      )
+    },
+    // 获取推荐列表
+    getArticleListFn () {
+      this.$http.get(apiUrl + '/api/articleList').then(
+        response => { this.articleList = response.body.reverse() },
+        response => console.log(response)
+      )
+    },
+    // 跳转推荐详情
     articleDetail: function (id) {
       // 这边不能多一个斜杠 '/articleDetail/'  因为router定义的路由是 '/articleDetail:id'
       // 我把router改成 '/articleDetail/:id' 让前后端的路由规则一致
@@ -225,16 +222,23 @@ export default {
         padding-left: 15px;
         .decribe {
           display: flex;
-          align-items: center;
-          padding-left: 15px;
-          span {
-            width: 8px;
-            height: 18px;
-            background: #409eff;
-            margin-right: 6px;
+          justify-content: space-between;
+          padding: 0 20px;
+          .decribe-left {
+            display: flex;
+            align-items: center;
+            span {
+              width: 8px;
+              height: 18px;
+              background: #409eff;
+              margin-right: 6px;
+            }
+            p {
+              margin: 0;
+              color: #409eff;
+            }
           }
-          p {
-            margin: 0;
+          .decribe-right {
             color: #409eff;
           }
         }
@@ -262,17 +266,24 @@ export default {
       }
       .decribe {
         display: flex;
-        align-items: center;
-        padding-left: 15px;
+        justify-content: space-between;
+        padding: 0 20px;
         margin: 15px;
-        span {
-          width: 8px;
-          height: 18px;
-          background: #409eff;
-          margin-right: 6px;
+        .decribe-left {
+          display: flex;
+          align-items: center;
+          span {
+            width: 8px;
+            height: 18px;
+            background: #409eff;
+            margin-right: 6px;
+          }
+          p {
+            margin: 0;
+            color: #409eff;
+          }
         }
-        p {
-          margin: 0;
+        .decribe-right {
           color: #409eff;
         }
       }

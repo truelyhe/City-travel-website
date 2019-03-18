@@ -22,11 +22,11 @@
             <span>推荐列表</span>
           </li>
         </router-link>
-        <router-link to="/admin/articleEdit">
+        <!-- <router-link to="/admin/articleEdit">
           <li>
             <span>写文章</span>
           </li>
-        </router-link>
+        </router-link> -->
          <router-link to="/about">
           <li>
             <span>关于</span>

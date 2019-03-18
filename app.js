@@ -5,6 +5,7 @@ const bodyParse = require('body-parser')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const router = require('./server/router')
+// const news = require('./server/news')
 const app = express()
 
 const resolve = file => path.resolve(__dirname, file)
@@ -22,11 +23,12 @@ app.use('/dist', express.static(resolve('./dist')))
 app.use(bodyParse.json())
 app.use(bodyParse.urlencoded({ extended: true }))
 app.use(router)
+// app.use(news)
 
 // session
 app.set('trust proxy', 1) // trust first proxy
 app.use(session({
-  secret: 'blog',
+  secret: 'trip',
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -34,7 +36,7 @@ app.use(session({
     maxAge: 2592000000
   },
   store: new MongoStore({
-    url: 'mongodb://localhost:27017/blog'
+    url: 'mongodb://localhost:27017/trip'
   })
 }))
 

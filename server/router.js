@@ -105,4 +105,29 @@ router.post('/api/admin/deleteArticle', function (req, res) {
   })
 })
 
+
+
+
+// 新闻发布
+router.post('/api/admin/saveNews', function (req, res) {
+  new db.News(req.body.newsInformation).save(function (err) {
+    if (err) {
+      res.status(500).send()
+      return
+    }
+    res.send()
+  })
+})
+
+// 获取新闻列表
+router.get('/api/newsList', function (req, res) {
+  db.News.find({}, function (err, docs) {
+    if (err) {
+      console.error(err)
+      return
+    }
+    res.json(docs)
+  })
+})
+
 module.exports = router

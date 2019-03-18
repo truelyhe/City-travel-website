@@ -22,6 +22,7 @@
 export default {
   data () {
     return {
+      switchIndex: 0
     }
   },
   methods: {

@@ -11,6 +11,7 @@ import About from '@/components/about'
 import ArticleList from '@/components/admin/articleList'
 import ArticleEdit from '@/components/admin/articleEdit'
 import CityNews from '@/components/admin/cityNews'
+import NewsAdd from '@/components/admin/newsAdd'
 import NoticeManage from '@/components/admin/noticeManage'
 import Signin from '@/components/admin/signin'
 
@@ -66,6 +67,11 @@ export default new Router({
       path: '/admin/articleEdit/:id',
       name: 'articleEdit',
       component: ArticleEdit
+    },
+    {
+      path: '/admin/newsAdd',
+      name: 'newsAdd',
+      component: NewsAdd
     },
     {
       path: '/admin/cityNews',

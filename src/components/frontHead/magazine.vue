@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <Header/>
-    <div><input class="input" type="text" value="" placeholder="分享下你的旅游干货吧~~~"></div>
+    <!-- <div><input class="input" type="text" value="" placeholder="分享下你的旅游干货吧~~~"></div> -->
     <Footer/>
   </div>
 </template>
@@ -22,7 +22,6 @@ export default {
 }
 </script>
 <style>
-
 .input{
   border: 1px solid #000;
   width:1000px;

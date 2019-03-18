@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-mongoose.connect('mongodb://localhost:27017/blog')
+mongoose.connect('mongodb://localhost:27017/trip')
 
 const userSchema = new mongoose.Schema({
   name: String,
@@ -16,9 +16,16 @@ const articleSchema = new mongoose.Schema({
   labels: Array
 })
 
+const newsSchema = new mongoose.Schema({
+  title: String,
+  date: String,
+  content: String
+})
+
 const Models = {
   User: mongoose.model('User', userSchema),
-  Article: mongoose.model('Article', articleSchema)
+  Article: mongoose.model('Article', articleSchema),
+  News: mongoose.model('News', newsSchema)
 }
 
 module.exports = Models

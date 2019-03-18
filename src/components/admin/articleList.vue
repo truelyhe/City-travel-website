@@ -1,57 +1,44 @@
 <template>
   <div class="list-warpper">
     <sidebar/>
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <!-- <span>推荐列表</span> -->
-        <ul>
-          <li>
-            <span>标题</span>
-            <span>内容</span>
-            <span><img src=''/></span>
-            <span>标签</span>
-            <span>时间</span>
-            <span class="editBtn">
-              <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
-            </span>
-          </li>
-        </ul>
-      </div>
-      <div class="text item">
-        <ul>
-          <li v-for="(item, index) in articleList" :key="index">
-            <span>{{item.title}}</span>
-            <span>{{item.content}}</span>
-            <span><img src=''/></span>
-            <span v-if="item.labels && item.labels.length === 0">未分类</span>
-            <span v-else>
-              <el-tag class="tag_margin" type="primary" v-for="tag in item.labels" :key="tag">{{ tag }}</el-tag>
-            </span>
-            <span>{{item.date}}</span>
-            <span>
-              <a @click="articleEdit(item._id)">编辑</a>
-              <a @click="deleteArticle(item._id)">删除</a>
-            </span>
-          </li>
-        </ul>
-      </div>
-    </el-card>
-    <!-- <div class="article_wrap" v-for="(item, index) in articleList" :key="index">
-      <div @click="articleEdit(item._id)" class="article_title">{{ item.title }}</div>
-      <div class="article_info">
-        <span class="article_info_date">发表于：{{ item.date }}</span>
-        <span class="article_info_label">标签：
-        <span v-if="item.labels.length === 0">未分类</span>
-        <el-tag v-else class="tag_margin" type="primary" v-for="tag in item.labels" :key="tag">{{ tag }}</el-tag>
-        </span>
-      </div>
-      <div class="article_gist">{{ item.gist }}</div>
-      <div>
-        <div @click="articleEdit(item._id)" class="article_button edit">修改</div>
-        <div @click="deleteArticle(item._id)" class="article_button delete">删除</div>
-      </div>
-      <div class="article_underline"></div>
-    </div> -->
+    <div class="list-warp">
+      <el-button class="add-btn" @click="articleEdit()">编写推文</el-button>
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <!-- <span>推荐列表</span> -->
+          <ul>
+            <li>
+              <span>标题</span>
+              <span>内容</span>
+              <span>图片</span>
+              <span>标签</span>
+              <span>时间</span>
+              <span class="editBtn">
+                <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+              </span>
+            </li>
+          </ul>
+        </div>
+        <div class="text item">
+          <ul>
+            <li v-for="(item, index) in articleList" :key="index">
+              <span>{{item.title}}</span>
+              <span>{{item.content}}</span>
+              <span><img :src='item.coverImg'/></span>
+              <span v-if="item.labels && item.labels.length === 0">未分类</span>
+              <span v-else>
+                <el-tag class="tag_margin" type="primary" v-for="tag in item.labels" :key="tag">{{ tag }}</el-tag>
+              </span>
+              <span>{{item.date}}</span>
+              <span>
+                <a @click="articleEdit(item._id)">编辑</a>
+                <a @click="deleteArticle(item._id)">删除</a>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </el-card>
+    </div>
   </div>
 </template>
 
@@ -137,6 +124,7 @@ export default {
       width: 960px;
       .clearfix {
         ul {
+          padding: 0;
           li {
             display: flex;
             justify-content: space-between;
@@ -166,13 +154,27 @@ export default {
         margin-bottom: 18px;
          ul {
           display: block;
+          padding: 0;
           li {
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
+            align-items: center
             span {
               width: 26%;
               display: flex;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              padding: 0 5px;
+              overflow: hidden;
+              span {
+                width: 90%;
+              }
+              img {
+                width: 50px;
+                height: 50px;
+                object-fit: cover;
+              }
               a {
                 width: 50%;
                 text-align: right;
