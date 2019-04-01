@@ -74,7 +74,7 @@ export default {
       inputValue: ''
     }
   },
-  activated () {
+  mounted: function () {
     console.log(this.$route.params.id)
     if (this.$route.params.id) {
       this.$http.get(apiUrl + '/api/articleDetail/' + this.$route.params.id).then(
@@ -89,8 +89,6 @@ export default {
         response => console.log(response)
       )
     }
-  },
-  mounted: function () {
   },
   methods: {
     // 编译Markdown

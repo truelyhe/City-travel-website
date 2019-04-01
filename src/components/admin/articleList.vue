@@ -63,7 +63,11 @@ export default {
   methods: {
     // 跳转至文章编辑页
     articleEdit: function (id) {
-      this.$router.push('/admin/articleEdit/' + id)
+      if (id) {
+        this.$router.push('/admin/articleEdit/' + id)
+      } else {
+        this.$router.push('/admin/articleEdit')
+      }
     },
     // 删除文章
     deleteArticle: function (id) {

@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <Header/>
+    <Header :switchIndex="1"/>
     <div class="Promotional-language">
       <h1>印象济南</h1>
     </div>

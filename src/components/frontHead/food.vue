@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <Header/>
+    <Header :switchIndex='3'/>
     <div class="Promotional-language">
       <h1>餐饮美食</h1>
       <h3>泉城济南美食攻略，吃到前5个，算你没有白来！</h3>
@@ -78,7 +78,8 @@ export default {
         padding-left: 395px;
       }
     }
-    .food{
+    .food {
+      margin-bottom: 50px;
       h2{
         margin-left :200px;
       }

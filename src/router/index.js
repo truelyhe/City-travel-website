@@ -7,6 +7,8 @@ import Tourist from '@/components/frontHead/tourist'
 import Impression from '@/components/frontHead/impression'
 import Food from '@/components/frontHead/food'
 import Magazine from '@/components/frontHead/magazine'
+import MagazineDetail from '@/components/frontHead/magazineDetail'
+import Hotel from '@/components/frontHead/hotel'
 import About from '@/components/about'
 import ArticleList from '@/components/admin/articleList'
 import ArticleEdit from '@/components/admin/articleEdit'
@@ -52,6 +54,16 @@ export default new Router({
       path: '/magazine',
       name: 'magazine',
       component: Magazine
+    },
+    {
+      path: '/magazineDetail',
+      name: 'magazineDetail',
+      component: MagazineDetail
+    },
+    {
+      path: '/hotel',
+      name: 'hotel',
+      component: Hotel
     },
     {
       path: '/admin/articleList',

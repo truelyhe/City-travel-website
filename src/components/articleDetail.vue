@@ -60,11 +60,9 @@ export default {
 
 <style lang="stylus" rel="stylesheet/stylus">
   .article_content_warp {
-    width: 1024px;
+    width: 100%;
     background: white;
     margin: 0 auto;
-    margin-top: 50px;
-    margin-bottom: 50px;
     .article_wrap {
       text-align: center;
       .article_detail_title {

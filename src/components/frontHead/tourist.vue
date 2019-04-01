@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <Header/>
+    <Header :switchIndex="2"/>
     <div class="Promotional-language">
       <h1>景区景点</h1>
       <h4>济南，黄河之南，大明湖畔的“泉城”，有72名泉，自古就有“家家泉水，户户垂杨”之誉</h4>

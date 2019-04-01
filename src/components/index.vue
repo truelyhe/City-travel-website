@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <Header/>
+    <Header :switchIndex="0"/>
     <div class="Promotional-language">
       <h1>济河之南，泉水上城</h1>
       <p>济南-一座饮着泉水成长的城市</p>
@@ -98,19 +98,6 @@
         </el-row>
       </div>
     </div>
-    <!-- <div class="article_wrap" v-for="(item, index) in articleList" :key="index">
-      <div class="article_title" @click="articleDetail( item._id )">{{ item.title }}</div>
-      <div class="article_info">
-        <span class="article_info_date">发表于：{{ item.date }}</span>
-        <span class="article_info_label">标签：
-        <span v-if="item.labels.length === 0">未分类</span>
-        <el-tag v-else class="tag_margin" type="primary" v-for="tag in item.labels" :key=tag>{{ tag }}</el-tag>
-        </span>
-      </div>
-      <div class="article_gist">{{ item.gist }}</div>
-      <div @click="articleDetail( item._id )" class="article_button article_all">阅读全文 ></div>
-      <div class="article_underline"></div>
-    </div> -->
     <Footer/>
   </div>
 </template>
@@ -288,8 +275,7 @@ export default {
         }
       }
       .recommand-list {
-        width: 1224px;
-        text-align: center;
+        width: 1240px;
         margin: 0 auto;
       }
     }
