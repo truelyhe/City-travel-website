@@ -38,37 +38,9 @@
          <div class="decribe-right">更多 >></div>
         </div>
         <ul>
-          <li>
-            <span>一条新闻</span>
-            <span>2019-02-07</span>
-          </li>
-          <li>
-            <span>一条新闻</span>
-            <span>2019-02-07</span>
-          </li>
-          <li>
-            <span>一条新闻</span>
-            <span>2019-02-07</span>
-          </li>
-          <li>
-            <span>一条新闻</span>
-            <span>2019-02-07</span>
-          </li>
-          <li>
-            <span>一条新闻</span>
-            <span>2019-02-07</span>
-          </li>
-          <li>
-            <span>一条新闻</span>
-            <span>2019-02-07</span>
-          </li>
-          <li>
-            <span>一条新闻</span>
-            <span>2019-02-07</span>
-          </li>
-          <li>
-            <span>一条新闻</span>
-            <span>2019-02-07</span>
+          <li v-for="(item, index) in noticeList.slice(0, 8)" :key="index">
+            <span>{{item.title}}</span>
+            <span>{{item.date.split(' ')[0]}}</span>
           </li>
         </ul>
       </div>
@@ -85,12 +57,14 @@
         <el-row>
           <el-col :span="8" v-for="(item, index) in articleList.slice(0, 3)" :key="index" :offset="index > 0 ? 2 : 0">
             <el-card :body-style="{ padding: '0px' }">
-              <img src="http://pic1.win4000.com/wallpaper/6/57beb9d2bb240.jpg" class="image">
-              <div style="padding: 14px;">
-                <span @click="articleDetail( item._id )">{{ item.title }}</span>
-                <div class="bottom clearfix">
-                  <time class="time">{{ item.date }}</time>
-                  <el-button type="text" class="button">操作按钮</el-button>
+              <div @click="articleDetail( item._id )">
+                <img src="http://pic1.win4000.com/wallpaper/6/57beb9d2bb240.jpg" class="image">
+                <div style="padding: 14px;">
+                  <span>{{ item.title }}</span>
+                  <div class="bottom clearfix">
+                    <time class="time">{{ item.date }}</time>
+                    <el-button type="text" class="button">操作按钮</el-button>
+                  </div>
                 </div>
               </div>
             </el-card>
@@ -113,6 +87,7 @@ export default {
     return {
       currentDate: new Date(),
       newsList: [], // 新闻列表
+      noticeList: [], // 公告列表
       articleList: [], // 推荐列表
       slideImages: [ // 轮播图
         {
@@ -140,6 +115,7 @@ export default {
   },
   mounted: function () {
     this.getNewsListFn()
+    this.getNoticeListFn()
     this.getArticleListFn()
   },
   methods: {
@@ -147,6 +123,13 @@ export default {
     getNewsListFn () {
       this.$http.get(apiUrl + '/api/newsList').then(
         response => { this.newsList = response.body.reverse() },
+        response => console.log(response)
+      )
+    },
+    // 获取通知列表
+    getNoticeListFn () {
+      this.$http.get(apiUrl + '/api/noticeList').then(
+        response => { this.noticeList = response.body.reverse() },
         response => console.log(response)
       )
     },
@@ -247,6 +230,9 @@ export default {
       overflow: hidden;
       .el-col, .el-col-8 {
         width: 30%;
+        .el-card {
+          cursor: pointer
+        }
       }
       .el-col-offset-2 {
         margin-left: 5%;

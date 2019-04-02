@@ -130,4 +130,48 @@ router.get('/api/newsList', function (req, res) {
   })
 })
 
+// 删除新闻
+router.post('/api/admin/deleteNew', function (req, res) {
+  db.News.remove({_id: req.body._id}, function (err) {
+    if (err) {
+      res.status(500).send()
+      return
+    }
+    res.send()
+  })
+})
+
+// 发布通知公告
+router.post('/api/admin/saveNotice', function (req, res) {
+  new db.Notice(req.body.newsInformation).save(function (err) {
+    if (err) {
+      res.status(500).send()
+      return
+    }
+    res.send()
+  })
+})
+
+// 获取公告列表
+router.get('/api/noticeList', function (req, res) {
+  db.Notice.find({}, function (err, docs) {
+    if (err) {
+      console.error(err)
+      return
+    }
+    res.json(docs)
+  })
+})
+
+// 删除公告
+router.post('/api/admin/deleteNotice', function (req, res) {
+  db.Notice.remove({_id: req.body._id}, function (err) {
+    if (err) {
+      res.status(500).send()
+      return
+    }
+    res.send()
+  })
+})
+
 module.exports = router

@@ -122,25 +122,29 @@ export default {
           date: this.date,
           content: this.content
         }
-        console.log(obj)
-        this.$http.post(apiUrl + '/api/admin/saveNews', {
+        const url = this.$route.query.fromNew ? '/api/admin/saveNews' : '/api/admin/saveNotice'
+        this.$http.post(apiUrl + url, {
           newsInformation: obj
         }).then(
           response => {
             self.$message({
-              message: '新闻发布成功',
+              message: this.$route.query.fromNew ? '新闻发布成功' : '通知发布成功',
               type: 'success'
             })
             // 保存成功后跳转至新闻列表页
-            self.refreshArticleList()
+            self.refreshList(this.$route.query.fromNew)
           },
           response => console.log(response)
         )
       }
     },
     // 保存成功后跳转至新闻列表页
-    refreshArticleList: function () {
-      this.$router.push('/admin/cityNews')
+    refreshList (state) {
+      if (state) {
+        this.$router.push('/admin/cityNews')
+      } else {
+        this.$router.push('/admin/noticeManage')
+      }
     },
     goBack: function () {
       this.$router.go(-1)

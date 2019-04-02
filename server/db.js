@@ -22,10 +22,17 @@ const newsSchema = new mongoose.Schema({
   content: String
 })
 
+const noticeSchema = new mongoose.Schema({
+  title: String,
+  date: String,
+  content: String
+})
+
 const Models = {
   User: mongoose.model('User', userSchema),
   Article: mongoose.model('Article', articleSchema),
-  News: mongoose.model('News', newsSchema)
+  News: mongoose.model('News', newsSchema),
+  Notice: mongoose.model('notice', noticeSchema)
 }
 
 module.exports = Models

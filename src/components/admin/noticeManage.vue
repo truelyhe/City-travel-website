@@ -1,44 +1,97 @@
 <template>
   <div class="list-warpper">
     <sidebar/>
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <span>公告管理</span>
-        <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
-      </div>
-      <!-- <div class="text item">
-        <ul>
-          <li v-for="(item, index) in articleList" :key="index">
-            <span>{{item.title}}</span>
-            <span>{{item.content}}</span>
-            <span><img src=''/></span>
-            <span v-if="item.labels.length === 0">未分类</span>
-            <span v-else>
-              <el-tag class="tag_margin" type="primary" v-for="tag in item.labels" :key="tag">{{ tag }}</el-tag>
-            </span>
-            <span>{{item.date}}</span>
-            <span>
-              <a @click="articleEdit(item._id)">编辑</a>
-              <a @click="deleteArticle(item._id)">删除</a>
-            </span>
-          </li>
-        </ul>
-      </div> -->
-    </el-card>
+    <div class="list-warp">
+      <el-button class="add-btn" @click="toAddNotice">添加公告</el-button>
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span>通知公告</span>
+          <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+        </div>
+        <div class="text item">
+          <ul>
+            <li v-for="(item, index) in noticeList" :key="index">
+              <span>{{item.title}}</span>
+              <span>{{item.content}}</span>
+              <span>图片</span>
+              <span>标签</span>
+              <span>{{item.date}}</span>
+              <span>
+                <a @click="noticeEdit(item._id)">编辑</a>
+                <a @click="deleteNoticeFn(item._id)">删除</a>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </el-card>
+    </div>
   </div>
 </template>
 
 <script>
 import sidebar from '@/base/sidebar.vue'
+import { apiUrl } from '@/api/config'
 
 export default {
   data () {
     return {
+      noticeList: []
     }
   },
-  mounted: function () {
+  mounted () {
+    this.getNoticeList()
   },
   methods: {
+    // 获取新闻列表
+    getNoticeList () {
+      this.$http.get(apiUrl + '/api/noticeList').then(
+        response => {
+          if (response.body) {
+            this.noticeList = response.body.reverse()
+          }
+        },
+        response => console.log(response)
+      )
+    },
+    // 添加新闻
+    toAddNotice () {
+      let query = {fromNew: false}
+      this.$router.push({
+        name: 'newsAdd',
+        query: query
+      })
+    },
+    newEdit () {},
+    // 删除新闻
+    deleteNoticeFn (id) {
+      let self = this
+      this.$confirm('此操作将永久删除该通知, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        self.$http.post(apiUrl + '/api/admin/deleteNotice', {
+          _id: id
+        }).then(
+          response => {
+            self.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            self.getNewsList()
+            self.fetchData()
+          },
+          response => {
+            console.log(response)
+          }
+        )
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    }
   },
   components: {
     sidebar
@@ -58,6 +111,14 @@ export default {
     width: 100%;
     margin: 50px 0;
     justify-content: center;
+    .list-warp {
+      display: flex;
+      flex-direction: column;
+      .add-btn {
+        width: 105px;
+        margin-bottom: 5px;
+      }
+    }
     .box-card {
       width: 960px;
       .clearfix:before,

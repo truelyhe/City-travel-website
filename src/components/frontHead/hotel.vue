@@ -114,6 +114,7 @@ export default {
 
 <style lang="stylus" rel="stylesheet/stylus">
   .content {
+    background-color:#f1f1f1;
     .Promotional-language {
       padding-top: 10px;
       text-align: center;
@@ -127,7 +128,7 @@ export default {
         li{
           display:flex;
           list-style:none;
-          background-color:#f1f1f1;
+          background-color:#fff;
           margin:10px 0;
           padding: 10px 15px;
           img{

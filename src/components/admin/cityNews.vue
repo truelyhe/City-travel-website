@@ -17,8 +17,8 @@
               <span>标签</span>
               <span>{{item.date}}</span>
               <span>
-                <a @click="articleEdit(item._id)">编辑</a>
-                <a @click="deleteArticle(item._id)">删除</a>
+                <a @click="newEdit(item._id)">编辑</a>
+                <a @click="deleteNew(item._id)">删除</a>
               </span>
             </li>
           </ul>
@@ -39,20 +39,57 @@ export default {
     }
   },
   mounted () {
-    // 获取列表
-    this.$http.get(apiUrl + '/api/newsList').then(
-      response => {
-        if (response.body) {
-          this.newsList = response.body.reverse()
-        }
-      },
-      response => console.log(response)
-    )
+    this.getNewsList()
   },
   methods: {
+    // 获取新闻列表
+    getNewsList () {
+      this.$http.get(apiUrl + '/api/newsList').then(
+        response => {
+          if (response.body) {
+            this.newsList = response.body.reverse()
+          }
+        },
+        response => console.log(response)
+      )
+    },
+    // 添加新闻
     toAddNews () {
+      let query = {fromNew: true}
       this.$router.push({
-        name: 'newsAdd'
+        name: 'newsAdd',
+        query: query
+      })
+    },
+    newEdit () {},
+    // 删除新闻
+    deleteNew (id) {
+      let self = this
+      this.$confirm('此操作将永久删除该新闻, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        self.$http.post(apiUrl + '/api/admin/deleteNew', {
+          _id: id
+        }).then(
+          response => {
+            self.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            self.getNewsList()
+            self.fetchData()
+          },
+          response => {
+            console.log(response)
+          }
+        )
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     }
   },

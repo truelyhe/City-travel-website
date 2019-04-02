@@ -2,7 +2,7 @@
   <div class="left_menu">
     <div class="menu_name">
       <div class="logo-title">
-        <img src="../assets/head.jpg"/>
+        <img src="../assets/trip.png"/>
         <span class="title">济南旅游网</span>
       </div>
       <div class="nav-tab">
