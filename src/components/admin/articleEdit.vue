@@ -90,11 +90,11 @@ export default {
       )
     }
   },
-  mounted: function () {
+  mounted () {
   },
   methods: {
     // 编译Markdown
-    compiledMarkdown: function () {
+    compiledMarkdown () {
       return marked(this.content, {sanitize: true})
     },
     // 延时赋值给content
@@ -102,7 +102,7 @@ export default {
       this.content = e.target.value
     }, 300),
     // 获取发表时间
-    getDate: function () {
+    getDate () {
       let mydate, y, m, d, hh, mm, ss
       mydate = new Date()
       y = mydate.getFullYear()
@@ -119,7 +119,7 @@ export default {
       this.date = y + '-' + m + '-' + d + ' ' + hh + ':' + mm + ':' + ss
     },
     // 保存文章
-    saveArticle: function () {
+    saveArticle () {
       let self = this
       if (this.title.length === 0) {
         this.$notify({
@@ -196,23 +196,23 @@ export default {
       }
     },
     // 保存成功后跳转至文章列表页
-    refreshArticleList: function () {
+    refreshArticleList () {
       this.$router.push('/admin/articleList')
     },
-    goBack: function () {
+    goBack () {
       this.$router.go(-1)
     },
     // element标签组件
-    handleClose: function (tag) {
+    handleClose (tag) {
       this.labels.splice(this.labels.indexOf(tag), 1)
     },
-    showInput: function () {
+    showInput () {
       this.inputVisible = true
       this.$nextTick(_ => {
         this.$refs.saveTagInput.$refs.input.focus()
       })
     },
-    handleInputConfirm: function () {
+    handleInputConfirm () {
       let inputValue = this.inputValue
       if (inputValue) this.labels.push(inputValue)
       this.inputVisible = false

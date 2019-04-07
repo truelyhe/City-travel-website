@@ -4,8 +4,8 @@
       <div class="return_button">
         <el-button icon="arrow-left" size="small" @click="goBack">返回</el-button>
       </div>
-      <div class="edit_head">标题</div>
-      <el-input v-model="title" placeholder="请输入标题"></el-input>
+      <div class="edit_head">昵称</div>
+      <el-input v-model="title" placeholder="请输入昵称"></el-input>
       <div class="tag_wrap">
         <span>标签: </span>
         <el-tag
@@ -45,10 +45,17 @@
 </template>
 
 <script>
+import _ from 'lodash'
+import marked from 'marked'
+import hightlight from 'highlight.js'
 import '../../assets/atom-one-light.css'
 import { apiUrl } from '@/api/config'
 var E = require('wangeditor')// 使用 npm 安装
-
+marked.setOptions({
+  hightlight: function (code) {
+    return hightlight.hightlightAuto(code).value
+  }
+})
 export default {
   name: 'articleEdit',
   data () {
@@ -56,7 +63,6 @@ export default {
       title: '',
       date: '',
       content: '',
-      editorContent: '',
       gist: '',
       labels: [],
       inputVisible: false,
@@ -64,12 +70,10 @@ export default {
     }
   },
   mounted: function () {
-    var editor = new E('#div3')
-    editor.customConfig.onchange = (html) => {
-      this.editorContent = html
-      // this.editorContent = editor.txt.text()
-    }
-    editor.create()
+    // var E = window.wangEditor
+    var editor2 = new E('#div3')
+    editor2.create()
+    console.log(this.$route.params.id)
     if (this.$route.params.id) {
       this.$http.get(apiUrl + '/api/articleDetail/' + this.$route.params.id).then(
         response => {
@@ -85,6 +89,14 @@ export default {
     }
   },
   methods: {
+    // 编译Markdown
+    compiledMarkdown: function () {
+      return marked(this.content, {sanitize: true})
+    },
+    // 延时赋值给content
+    update: _.debounce(function (e) {
+      this.content = e.target.value
+    }, 300),
     // 获取发表时间
     getDate: function () {
       let mydate, y, m, d, hh, mm, ss
@@ -105,19 +117,26 @@ export default {
     // 保存文章
     saveArticle: function () {
       let self = this
-      if (!this.title.length) {
+      if (this.title.length === 0) {
         this.$notify({
           title: '提醒',
-          message: '请输入标题',
+          message: '请输入昵称',
           type: 'warning'
         })
         return
       }
-      console.log(this.editorContent)
-      if (!this.editorContent) {
+      if (this.content.length === 0) {
         this.$notify({
           title: '提醒',
           message: '请输入内容',
+          type: 'warning'
+        })
+        return
+      }
+      if (this.gist.length === 0) {
+        this.$notify({
+          title: '提醒',
+          message: '请输入简介',
           type: 'warning'
         })
         return
@@ -128,7 +147,7 @@ export default {
           _id: this.$route.params.id,
           title: this.title,
           date: this.date,
-          content: this.editorContent,
+          content: this.content,
           gist: this.gist,
           labels: this.labels
         }
@@ -146,23 +165,23 @@ export default {
           response => console.log(response)
         )
       } else {
-        // 编辑日志
+        // 新建文章
         // 获取时间
         this.getDate()
         let obj = {
           title: this.title,
-          content: this.editorContent,
-          images: ['http://pic1.win4000.com/wallpaper/6/57beb9d2bb240.jpg', 'http://pic1.win4000.com/wallpaper/6/57beb9d2bb240.jpg'],
-          labels: this.labels,
-          status: false,
-          date: this.date
+          date: this.date,
+          content: this.content,
+          coverImg: 'http://pic1.win4000.com/wallpaper/6/57beb9d2bb240.jpg',
+          gist: this.gist,
+          labels: this.labels
         }
-        this.$http.post(apiUrl + '/api/admin/saveDiary', {
-          diaryInformation: obj
+        this.$http.post(apiUrl + '/api/admin/saveArticle', {
+          articleInformation: obj
         }).then(
           response => {
             self.$message({
-              message: '发表日志成功',
+              message: '发表文章成功',
               type: 'success'
             })
             // 保存成功后跳转至文章列表页
@@ -172,9 +191,9 @@ export default {
         )
       }
     },
-    // 保存成功后跳转至日志页
+    // 保存成功后跳转至文章列表页
     refreshArticleList: function () {
-      this.$router.push({name: 'magazine'})
+      this.$router.push('/admin/articleList')
     },
     goBack: function () {
       this.$router.go(-1)

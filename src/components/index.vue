@@ -1,75 +1,77 @@
 <template>
-  <div class="content">
+  <div class="index-warpper">
     <Header :switchIndex="0"/>
     <div class="Promotional-language">
       <h1>济河之南，泉水上城</h1>
       <p>济南-一座饮着泉水成长的城市</p>
     </div>
     <div class="carousel">
-      <el-carousel :interval="4000" :autoplay="true" type="card" height="300px">
+      <el-carousel :interval="4000" :autoplay="true" type="card" height="350px">
         <el-carousel-item v-for="(item, index) in slideImages" :key="index">
           <img :src="item.url"/>
           <!-- <h3>{{ item }}</h3> -->
         </el-carousel-item>
       </el-carousel>
     </div>
-    <div class="city-new-warp">
-      <div class="left">
+    <div class="index-warp">
+      <div class="city-new-warp">
+        <div class="left">
+          <div class="decribe">
+            <div class="decribe-left">
+              <span></span>
+              <p>城市要闻</p>
+            </div>
+            <div class="decribe-right">更多 >></div>
+          </div>
+          <ul>
+            <li v-for="(item, index) in newsList.slice(0, 8)" :key="index">
+              <span>{{item.title}}</span>
+              <span>{{item.date.split(' ')[0]}}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="right">
+          <div class="decribe">
+            <div class="decribe-left">
+              <span></span>
+              <p>通知公告</p>
+            </div>
+          <div class="decribe-right">更多 >></div>
+          </div>
+          <ul>
+            <li v-for="(item, index) in noticeList.slice(0, 8)" :key="index">
+              <span>{{item.title}}</span>
+              <span>{{item.date.split(' ')[0]}}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="recommand">
         <div class="decribe">
           <div class="decribe-left">
             <span></span>
-            <p>城市要闻</p>
+            <p>今日推荐</p>
           </div>
           <div class="decribe-right">更多 >></div>
         </div>
-        <ul>
-          <li v-for="(item, index) in newsList.slice(0, 8)" :key="index">
-            <span>{{item.title}}</span>
-            <span>{{item.date.split(' ')[0]}}</span>
-          </li>
-        </ul>
-      </div>
-      <div class="right">
-        <div class="decribe">
-          <div class="decribe-left">
-            <span></span>
-            <p>通知公告</p>
-          </div>
-         <div class="decribe-right">更多 >></div>
-        </div>
-        <ul>
-          <li v-for="(item, index) in noticeList.slice(0, 8)" :key="index">
-            <span>{{item.title}}</span>
-            <span>{{item.date.split(' ')[0]}}</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="recommand">
-      <div class="decribe">
-        <div class="decribe-left">
-          <span></span>
-          <p>今日推荐</p>
-        </div>
-        <div class="decribe-right">更多 >></div>
-      </div>
-      <div class="recommand-list">
-        <el-row>
-          <el-col :span="8" v-for="(item, index) in articleList.slice(0, 3)" :key="index" :offset="index > 0 ? 2 : 0">
-            <el-card :body-style="{ padding: '0px' }">
-              <div @click="articleDetail( item._id )">
-                <img src="http://pic1.win4000.com/wallpaper/6/57beb9d2bb240.jpg" class="image">
-                <div style="padding: 14px;">
-                  <span>{{ item.title }}</span>
-                  <div class="bottom clearfix">
-                    <time class="time">{{ item.date }}</time>
-                    <el-button type="text" class="button">操作按钮</el-button>
+        <div class="recommand-list">
+          <el-row>
+            <el-col :span="8" v-for="(item, index) in articleList.slice(0, 3)" :key="index" :offset="index > 0 ? 2 : 0">
+              <el-card :body-style="{ padding: '0px' }">
+                <div @click="articleDetail( item._id )">
+                  <img src="http://pic1.win4000.com/wallpaper/6/57beb9d2bb240.jpg" class="image">
+                  <div style="padding: 14px;">
+                    <span>{{ item.title }}</span>
+                    <div class="bottom clearfix">
+                      <time class="time">{{ item.date }}</time>
+                      <el-button type="text" class="button">操作按钮</el-button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
+              </el-card>
+            </el-col>
+          </el-row>
+        </div>
       </div>
     </div>
     <Footer/>
@@ -113,7 +115,7 @@ export default {
   },
   created () {
   },
-  mounted: function () {
+  mounted () {
     this.getNewsListFn()
     this.getNoticeListFn()
     this.getArticleListFn()
@@ -141,7 +143,7 @@ export default {
       )
     },
     // 跳转推荐详情
-    articleDetail: function (id) {
+    articleDetail (id) {
       // 这边不能多一个斜杠 '/articleDetail/'  因为router定义的路由是 '/articleDetail:id'
       // 我把router改成 '/articleDetail/:id' 让前后端的路由规则一致
       this.$router.push('/articleDetail/' + id)
@@ -155,7 +157,7 @@ export default {
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  .content {
+  .index-warpper {
     .Promotional-language {
       padding-top: 10px;
       text-align: center;
@@ -181,12 +183,17 @@ export default {
         background-color: #d3dce6;
       }
     }
+    .index-warp {
+      margin: 0 20px;
+      margin: 0 auto;
+      width: 1400px;
+      margin-top: 30px;
+    }
     .city-new-warp {
       display: flex;
       width: 100%;
       text-align: left;
       margin: 0 auto;
-      padding-top: 20px;
       .left , .right {
         width: 50%;
         padding-left: 15px;
@@ -215,12 +222,14 @@ export default {
         ul {
           list-style: none;
           margin: 15px;
-          background: #ffffff;
+          padding: 0 20px;
           li {
             display: flex;
-            padding: 10px;
+            padding: 10px 5px;
+            margin: 5px 0;
             font-size: 12px;
             justify-content: space-between;
+            border-bottom: 1px solid #f1f1f1;
           }
         }
       }
@@ -263,6 +272,7 @@ export default {
       .recommand-list {
         width: 1240px;
         margin: 0 auto;
+        padding: 10px 0;
       }
     }
   }
@@ -293,61 +303,5 @@ export default {
 
    .clearfix:after {
       clear: both
-  }
-
-  .article_wrap {
-    padding: 40px;
-  }
-
-  .article_title {
-    display: inline-block;
-    color: #222;
-    font-size: 34px;
-    font-weight: 600;
-    border-bottom: 1px solid white;
-    cursor: pointer;
-  }
-
-  .article_title:hover {
-    border-bottom: 1px solid #222;
-  }
-
-  .article_info {
-    color: #999;
-    font-size: 14px;
-    padding-top: 8px;
-  }
-
-  .tag_margin {
-    margin: 3px;
-  }
-
-  .article_gist {
-    text-align: left;
-    padding-top: 40px;
-    padding-bottom: 40px;
-    font-size: 16px;
-  }
-
-  .article_button {
-    display: inline-block;
-    padding: 3px 12px;
-    border: 2px solid #222;
-    color: #222;
-    font-size: 14px;
-    cursor: pointer;
-  }
-
-  .article_all:hover {
-    color: white;
-    background: #000;
-    font-weight: 600;
-  }
-
-  .article_underline {
-    height: 1px;
-    width: 40px;
-    background: #545455;
-    margin: 80px auto 0;
   }
 </style>

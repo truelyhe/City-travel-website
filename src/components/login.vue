@@ -1,13 +1,27 @@
 <template>
   <div class="sign_wrapper">
-    <img src="@/assets/sign-in-bg.png"/>
+    <img src="@/assets/login-bg.jpg"/>
     <div class="sign_wrap">
-      <h1>后台管理</h1>
+      <h1 v-if="!isRegister">济南旅游网站</h1>
+      <h1 v-if="isRegister">注册</h1>
       <el-input v-model="name" placeholder="请输入用户名"></el-input>
       <el-input v-model="password" placeholder="请输入密码" type="password"></el-input>
-      <div class="sign-btn">
-        <!-- <el-button @click="signup">注册</el-button> -->
+      <el-input v-model="password2" v-if="isRegister" placeholder="确认密码" type="password"></el-input>
+      <div class="avatar-warp" v-if="isRegister">
+        选择头像:
+        <el-radio-group v-model="selectAvatar">
+          <el-radio :label="1"><img src="@/assets/avatar/none.jpg"/></el-radio>
+          <el-radio :label="2"><img src="@/assets/avatar/boy.jpeg"/></el-radio>
+          <el-radio :label="3"><img src="@/assets/avatar/girl.jpeg"/></el-radio>
+        </el-radio-group>
+      </div>
+      <div class="sign-btn" v-if="!isRegister">
+        <el-button @click="toRegister">注册</el-button>
         <el-button type="primary" @click="signin">登录</el-button>
+      </div>
+      <div class="sign-btn" v-if="isRegister">
+        <el-button @click="goBackFn">返回</el-button>
+        <el-button @click="registerFn">确定</el-button>
       </div>
     </div>
   </div>
@@ -20,27 +34,41 @@ export default {
   name: 'signin',
   data () {
     return {
-      name: '',
-      password: '',
+      isRegister: false,
+      name: '', // 用户名
+      password: '', // 密码
+      password2: '', // 确认密码
+      selectAvatar: 1,
       hasName: false // 用户名被占
     }
   },
   mounted: function () {
-
   },
   methods: {
-    signup: function () {
+    // 跳转注册
+    toRegister () {
+      this.isRegister = true
+      this.name = ''
+      this.password = ''
+    },
+    goBackFn () {
+      this.isRegister = false
+    },
+    // 注册
+    registerFn () {
       let _this = this
       if (this.name.length < 6) {
         this.$message.error('用户名不能为空或小于六个字符')
         return
       }
-
       if (this.password.length < 6) {
         this.$message.error('密码不能为空或小于六个字符')
         return
       }
-
+      if (this.password !== this.password2) {
+        this.$message.error('两次密码输入不一致')
+        return
+      }
       this.$http.get(apiUrl + '/api/admin/getUser/' + this.name).then(
         response => {
           if (response.body.name === _this.name) {
@@ -51,9 +79,11 @@ export default {
           } else {
             let obj = {
               name: _this.name,
-              password: _this.password
+              password: _this.password,
+              avatarCount: this.selectAvatar
+              // avatar: this.selectAvatar === 1 ? '@/assets/avatar/none.jpg' : this.selectAvatar === 2 ? '@/assets/avatar/boy.jpeg' : '@/assets/avatar/girl.jpeg'
             }
-
+            console.log(obj)
             _this.$http.post(apiUrl + '/api/admin/signup', {
               userInfo: obj
             }).then(
@@ -62,6 +92,9 @@ export default {
                   message: '注册成功',
                   type: 'success'
                 })
+                _this.setTimeout(() => {
+                  _this.isRegister = false
+                }, 3000)
               },
               response => console.log('注册失败' + response)
             )
@@ -70,6 +103,7 @@ export default {
         response => console.log(response)
       )
     },
+    // 登录
     signin: function () {
       let _this = this
       if (this.name.length < 6) {
@@ -100,8 +134,10 @@ export default {
                   type: 'success'
                 })
                 delete _this.password
-                // _this.$router.go(-1)
-                this.$router.push('/admin/articleList/')
+                localStorage.setItem('userInfo', JSON.stringify(obj))
+                this.$router.push({
+                  name: 'magazine'
+                })
               },
               response => console.log('登录失败' + response)
             )
@@ -126,7 +162,7 @@ export default {
     img {
       position: absolute;
       width: 100%;
-      top: 100px;
+      top: 0;
       z-index: -1;
     }
     .sign_wrap {
@@ -140,8 +176,20 @@ export default {
       .el-input, .sign-btn {
         padding-top: 20px;
         text-align: center;
-        .el-button--primary {
-          width: 100px;
+        .submit-btn {
+          width: 120px;
+        }
+      }
+      .avatar-warp {
+        padding: 20px 0;
+        .el-radio-group {
+          .el-radio {
+            padding-right: 25px;
+            img {
+              width: 35px;
+              height: 35px;
+            }
+          }
         }
       }
     }

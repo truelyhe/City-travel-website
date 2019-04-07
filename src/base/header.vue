@@ -12,7 +12,7 @@
         <span :class="{active: switchIndex === 3}" @click="toFoodPage()">餐饮美食</span>
         <span :class="{active: switchIndex === 4}"  @click="toQuarterPage()">住宿指南</span>
         <span :class="{active: switchIndex === 5}" @click="toMagazinePage()">游客日志</span>
-        <span :class="{active: switchIndex === 6}">留言板</span>
+        <span :class="{active: switchIndex === 6}" @click="toMessagePage()">留言板</span>
       </div>
     </div>
   </div>
@@ -47,6 +47,10 @@ export default {
     // 跳转到游客日志页面
     toMagazinePage () {
       this.$router.push({name: 'magazine'})
+    },
+    // 跳转到留言板页面
+    toMessagePage () {
+      this.$router.push({name: 'message'})
     },
     // 跳转到登录页
     tologinPage () {

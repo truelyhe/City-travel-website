@@ -174,4 +174,37 @@ router.post('/api/admin/deleteNotice', function (req, res) {
   })
 })
 
+// 发表旅游日志
+router.post('/api/admin/saveDiary', function (req, res) {
+  new db.Diary(req.body.diaryInformation).save(function (err) {
+    if (err) {
+      res.status(500).send()
+      return
+    }
+    res.send()
+  })
+})
+
+// 获取日志列表
+router.get('/api/diaryList', function (req, res) {
+  db.Diary.find({}, function (err, docs) {
+    if (err) {
+      console.error(err)
+      return
+    }
+    res.json(docs)
+  })
+})
+
+// 删除日志
+router.post('/api/admin/deleteDiary', function (req, res) {
+  db.Diary.remove({_id: req.body._id}, function (err) {
+    if (err) {
+      res.status(500).send()
+      return
+    }
+    res.send()
+  })
+})
+
 module.exports = router
