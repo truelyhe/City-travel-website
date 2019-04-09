@@ -82,6 +82,7 @@ router.post('/api/admin/updateArticle', function (req, res) {
     docs[0].title = info.title
     docs[0].date = info.date
     docs[0].content = info.content
+    docs[0].coverImg = info.coverImg
     docs[0].gist = info.gist
     docs[0].labels = info.labels
     db.Article(docs[0]).save(function (err) {
@@ -130,6 +131,17 @@ router.get('/api/newsList', function (req, res) {
   })
 })
 
+// 新闻详情页
+router.get('/api/newDetail/:id', function (req, res) {
+  db.News.findOne({ _id: req.params.id }, function (err, docs) {
+    if (err) {
+      console.error(err)
+      return
+    }
+    res.send(docs)
+  })
+})
+
 // 删除新闻
 router.post('/api/admin/deleteNew', function (req, res) {
   db.News.remove({_id: req.body._id}, function (err) {
@@ -160,6 +172,17 @@ router.get('/api/noticeList', function (req, res) {
       return
     }
     res.json(docs)
+  })
+})
+
+// 公告详情页
+router.get('/api/noticeDetail/:id', function (req, res) {
+  db.Notice.findOne({ _id: req.params.id }, function (err, docs) {
+    if (err) {
+      console.error(err)
+      return
+    }
+    res.send(docs)
   })
 })
 

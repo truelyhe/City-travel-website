@@ -1,24 +1,22 @@
 <template>
-  <div class="list-warpper">
+  <div class="news-list-warpper">
     <sidebar/>
     <div class="list-warp">
-      <el-button class="add-btn" @click="toAddNotice">添加公告</el-button>
+      <el-button class="add-btn" @click="toAddNews">添加要闻</el-button>
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span>通知公告</span>
+          <span>城市要闻</span>
           <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
         </div>
         <div class="text item">
           <ul>
-            <li v-for="(item, index) in noticeList" :key="index">
+            <li v-for="(item, index) in newsList" :key="index">
               <span>{{item.title}}</span>
               <span>{{item.content}}</span>
-              <span>图片</span>
-              <span>标签</span>
-              <span>{{item.date}}</span>
-              <span>
-                <a @click="noticeEdit(item._id)">编辑</a>
-                <a @click="deleteNoticeFn(item._id)">删除</a>
+              <span style="width: 160px">{{item.date}}</span>
+              <span class="edit-btn">
+                <!-- <a @click="newEdit(item._id)">编辑</a> -->
+                <a @click="deleteNew(item._id)">删除</a>
               </span>
             </li>
           </ul>
@@ -35,27 +33,27 @@ import { apiUrl } from '@/api/config'
 export default {
   data () {
     return {
-      noticeList: []
+      newsList: []
     }
   },
   mounted () {
-    this.getNoticeList()
+    this.getNewsList()
   },
   methods: {
     // 获取新闻列表
-    getNoticeList () {
-      this.$http.get(apiUrl + '/api/noticeList').then(
+    getNewsList () {
+      this.$http.get(apiUrl + '/api/newsList').then(
         response => {
           if (response.body) {
-            this.noticeList = response.body.reverse()
+            this.newsList = response.body.reverse()
           }
         },
         response => console.log(response)
       )
     },
     // 添加新闻
-    toAddNotice () {
-      let query = {fromNew: false}
+    toAddNews () {
+      let query = {fromNew: true}
       this.$router.push({
         name: 'newsAdd',
         query: query
@@ -63,14 +61,14 @@ export default {
     },
     newEdit () {},
     // 删除新闻
-    deleteNoticeFn (id) {
+    deleteNew (id) {
       let self = this
-      this.$confirm('此操作将永久删除该通知, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除该新闻, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        self.$http.post(apiUrl + '/api/admin/deleteNotice', {
+        self.$http.post(apiUrl + '/api/admin/deleteNew', {
           _id: id
         }).then(
           response => {
@@ -103,7 +101,7 @@ export default {
   .main {
     text-align: left;
   }
-  .list-warpper {
+  .news-list-warpper {
     position: fixed;
     height: 100%;
     overflow-x: hidden;
@@ -136,18 +134,18 @@ export default {
         margin-bottom: 18px;
          ul {
           display: block;
+          padding: 0;
           li {
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
             span {
-              width: 26%;
-              display: flex;
-              a {
-                width: 50%;
-                text-align: right;
-                cursor: pointer;
-              }
+              width: 300px;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              word-break: break-all;
+              padding: 0 5px;
               .edit:hover {
                 background: limegreen;
                 color: white;
@@ -157,6 +155,16 @@ export default {
                 background: red;
                 color: white;
                 font-weight: 600;
+              }
+            }
+            .edit-btn {
+              text-align: right;
+              width: 60px;
+              a {
+                cursor: pointer;
+              }
+              a:hover {
+                color: #409eff;
               }
             }
           }

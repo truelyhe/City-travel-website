@@ -4,39 +4,12 @@
       <div class="return_button">
         <el-button icon="arrow-left" size="small" @click="goBack">返回</el-button>
       </div>
-      <div class="edit_head">昵称</div>
-      <el-input v-model="title" placeholder="请输入昵称"></el-input>
-      <div class="tag_wrap">
-        <span>标签: </span>
-        <el-tag
-            class="tag_margin"
-            :key="tag"
-            v-for="tag in labels"
-            :closable="true"
-            :close-trasition="true"
-            @close="handleClose(tag)"
-            type="primary"
-        >{{ tag }}
-        </el-tag>
-        <el-input
-            class="input-new-tag"
-            v-if="inputVisible"
-            v-model="inputValue"
-            ref="saveTagInput"
-            size="mini"
-            @keyup.enter.native="handleInputConfirm"
-            @blur="handleInputConfirm"
-        >
-        </el-input>
-        <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
-      </div>
-      <!-- <div class="edit_head">内容 (Markdown编辑器)</div>
+      <div class="edit_head">标题</div>
+      <el-input v-model="title" placeholder="请输入标题"></el-input>
+      <div class="edit_head">内容</div>
       <div class="markdown">
-        <textarea class="markdown_input" v-model="content" @input="update"></textarea>
-        <div class="markdown_compiled" v-html="compiledMarkdown()"></div>
-        <div class="clear"></div>
-      </div> -->
-      <div id="div3"></div>
+        <textarea class="markdown_input" v-model="content"></textarea>
+      </div>
       <div class="save_button">
         <el-button type="primary" @click="saveArticle">保存</el-button>
       </div>
@@ -45,17 +18,10 @@
 </template>
 
 <script>
-import _ from 'lodash'
-import marked from 'marked'
-import hightlight from 'highlight.js'
-import '../../assets/atom-one-light.css'
+// import _ from 'lodash'
+// import '@/assets/atom-one-light.css'
 import { apiUrl } from '@/api/config'
-var E = require('wangeditor')// 使用 npm 安装
-marked.setOptions({
-  hightlight: function (code) {
-    return hightlight.hightlightAuto(code).value
-  }
-})
+
 export default {
   name: 'articleEdit',
   data () {
@@ -63,46 +29,36 @@ export default {
       title: '',
       date: '',
       content: '',
-      gist: '',
-      labels: [],
       inputVisible: false,
       inputValue: ''
     }
   },
   mounted: function () {
-    // var E = window.wangEditor
-    var editor2 = new E('#div3')
-    editor2.create()
-    console.log(this.$route.params.id)
-    if (this.$route.params.id) {
-      this.$http.get(apiUrl + '/api/articleDetail/' + this.$route.params.id).then(
-        response => {
-          let article = response.body
-          this.title = article.title
-          this.date = article.date
-          this.content = article.content
-          this.gist = article.gist
-          this.labels = article.labels
-        },
-        response => console.log(response)
-      )
-    }
+    // if (this.$route.params.id) {
+    //   this.$http.get(apiUrl + '/api/articleDetail/' + this.$route.params.id).then(
+    //     response => {
+    //       let article = response.body
+    //       this.title = article.title
+    //       this.date = article.date
+    //       this.content = article.content
+    //       this.gist = article.gist
+    //       this.labels = article.labels
+    //     },
+    //     response => console.log(response)
+    //   )
+    // }
   },
   methods: {
-    // 编译Markdown
-    compiledMarkdown: function () {
-      return marked(this.content, {sanitize: true})
-    },
     // 延时赋值给content
-    update: _.debounce(function (e) {
-      this.content = e.target.value
-    }, 300),
+    // update: _.debounce(function (e) {
+    //   this.content = e.target.value
+    // }, 300),
     // 获取发表时间
     getDate: function () {
       let mydate, y, m, d, hh, mm, ss
       mydate = new Date()
       y = mydate.getFullYear()
-      m = mydate.getMonth()
+      m = mydate.getMonth() + 1 // 1月是0
       d = mydate.getDate()
       hh = mydate.getHours()
       mm = mydate.getMinutes()
@@ -120,7 +76,7 @@ export default {
       if (this.title.length === 0) {
         this.$notify({
           title: '提醒',
-          message: '请输入昵称',
+          message: '请输入标题',
           type: 'warning'
         })
         return
@@ -129,14 +85,6 @@ export default {
         this.$notify({
           title: '提醒',
           message: '请输入内容',
-          type: 'warning'
-        })
-        return
-      }
-      if (this.gist.length === 0) {
-        this.$notify({
-          title: '提醒',
-          message: '请输入简介',
           type: 'warning'
         })
         return
@@ -171,29 +119,31 @@ export default {
         let obj = {
           title: this.title,
           date: this.date,
-          content: this.content,
-          coverImg: 'http://pic1.win4000.com/wallpaper/6/57beb9d2bb240.jpg',
-          gist: this.gist,
-          labels: this.labels
+          content: this.content
         }
-        this.$http.post(apiUrl + '/api/admin/saveArticle', {
-          articleInformation: obj
+        const url = this.$route.query.fromNew ? '/api/admin/saveNews' : '/api/admin/saveNotice'
+        this.$http.post(apiUrl + url, {
+          newsInformation: obj
         }).then(
           response => {
             self.$message({
-              message: '发表文章成功',
+              message: this.$route.query.fromNew ? '新闻发布成功' : '通知发布成功',
               type: 'success'
             })
-            // 保存成功后跳转至文章列表页
-            self.refreshArticleList()
+            // 保存成功后跳转至新闻列表页
+            self.refreshList(this.$route.query.fromNew)
           },
           response => console.log(response)
         )
       }
     },
-    // 保存成功后跳转至文章列表页
-    refreshArticleList: function () {
-      this.$router.push('/admin/articleList')
+    // 保存成功后跳转至新闻列表页
+    refreshList (state) {
+      if (state) {
+        this.$router.push('/admin/cityNews')
+      } else {
+        this.$router.push('/admin/noticeManage')
+      }
     },
     goBack: function () {
       this.$router.go(-1)
@@ -256,9 +206,9 @@ export default {
     -moz-border-radius: 4px;
     border-radius: 4px;
     width: 100%;
-    height: 800px;
+    height: 300px;
     vertical-align: top;
-    background: #f5f7f9;
+    background: #fff;
     overflow: hidden;
   }
 
@@ -270,7 +220,7 @@ export default {
   .markdown_input {
     float: left;
     display: inline-block;
-    width: 49%;
+    width: 99%;
     height: 98%;
     background-color: white;
     padding-left: 1%;

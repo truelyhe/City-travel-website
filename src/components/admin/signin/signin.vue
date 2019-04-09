@@ -101,7 +101,7 @@ export default {
                 })
                 delete _this.password
                 // _this.$router.go(-1)
-                this.$router.push('/admin/articleList/')
+                this.$router.push({name: 'articleList'})
               },
               response => console.log('登录失败' + response)
             )

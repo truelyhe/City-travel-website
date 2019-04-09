@@ -35,15 +35,26 @@ const diarySchema = new mongoose.Schema({
   images: Array,
   labels: Array,
   status: Boolean,
-  date: String
+  date: String,
+  // userid: String
+  username: String,
+  usercount: Number
+})
+
+const messageSchema = new mongoose.Schema({
+  content: String,
+  date: String,
+  username: String,
+  usercount: Number
 })
 
 const Models = {
   User: mongoose.model('User', userSchema),
   Article: mongoose.model('Article', articleSchema),
   News: mongoose.model('News', newsSchema),
-  Notice: mongoose.model('notice', noticeSchema),
-  Diary: mongoose.model('diary', diarySchema)
+  Notice: mongoose.model('Notice', noticeSchema),
+  Diary: mongoose.model('Diary', diarySchema),
+  Message: mongoose.model('Message', messageSchema)
 }
 
 module.exports = Models

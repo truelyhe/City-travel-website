@@ -28,15 +28,17 @@
         </el-popover>
         <div class="detail" v-for="(item, index) in diaryList" :key="index">
           <div class="detail-top">
-            <img :src="item.images[0]"/>
+            <img v-if="item.usercount === 1" src="@/assets/avatar/none.jpg"/>
+            <img v-if="item.usercount === 2" src="@/assets/avatar/boy.jpeg"/>
+            <img v-if="item.usercount === 3" src="@/assets/avatar/girl.jpeg"/>
             <div class="top-right">
-              <span class="nickname">昵称</span>
+              <span class="nickname">{{item.username}}</span>
               <span>2019-04-02</span>
             </div>
           </div>
           <div class="detail-bottom">
             <h2>{{item.title}}</h2>
-            <p id="pContent" :class="{text: isHeigh && item.status}" v-html="item.content">{{item.content}}</p>
+            <p :class="{text: isHeigh && item.status}" v-html="item.content">{{item.content}}</p>
             <a v-if="item.status" href="javascript:;" @click="readAllFn()">{{isHeigh ? '展开全文' : '收起'}}</a>
             <div class="detail-img">
               <img v-for="(i, idx) in item.images" :key="idx" :src="i"/>
@@ -103,7 +105,10 @@ export default {
       if (!this.userInfo) {
         this.$router.push({name: 'login'})
       } else {
-        this.$router.push({name: 'magazineDetail'})
+        this.$router.push({
+          name: 'magazineDetail',
+          query: this.userInfo
+        })
       }
     },
     // 查看全文
@@ -127,12 +132,12 @@ export default {
     display: flex;
     .me-info {
       background: #fff;
-      width: 300px;
       margin: 10px 30px 15px 0;
       .info-top {
         margin-bottom: 10px;
         border-bottom: 1px solid #e3e3e3;
         text-align: center;
+        width: 200px;
         img {
           width: 80px;
           height: 80px;
@@ -198,6 +203,14 @@ export default {
           font-family: punctuation,"PingFangSC-Regular","Microsoft Yahei","sans-serif";
           -webkit-font-smoothing: subpixel-antialiased;
           white-space: pre-wrap;
+          span {
+            margin-bottom: 10px;
+            display: block;
+          }
+          img {
+            max-width: 33.3%;
+            max-height: 200px;
+          }
         }
         .text {
           height: 65px;

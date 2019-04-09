@@ -7,22 +7,22 @@
             <span>网站首页</span>
           </li>
         </router-link>
-        <router-link to="/admin/cityNews">
+        <router-link to="/admin/news/cityNews">
           <li>
             <span>要闻编辑</span>
           </li>
         </router-link>
-        <router-link to="/admin/noticeManage">
+        <router-link to="/admin/notice/noticeManage">
           <li>
             <span>公告管理</span>
           </li>
         </router-link>
-        <router-link to="/admin/articleList">
+        <router-link to="/admin/article/articleList">
           <li>
             <span>推荐列表</span>
           </li>
         </router-link>
-        <router-link to="/admin/diaryManage">
+        <router-link to="/admin/diary/diaryManage">
           <li>
             <span>日志管理</span>
           </li>

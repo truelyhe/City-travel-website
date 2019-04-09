@@ -1,9 +1,10 @@
 <template>
   <div>
-    <div class="edit_wrap">
+    <div class="edit_wrapper">
       <div class="return_button">
         <el-button icon="arrow-left" size="small" @click="goBack">返回</el-button>
       </div>
+      <h2>发布推文</h2>
       <div class="edit_head">标题</div>
       <el-input v-model="title" placeholder="请输入标题"></el-input>
       <div class="tag_wrap">
@@ -37,37 +38,33 @@
           placeholder="请输入简介"
           v-model="gist">
       </el-input>
-      <div class="edit_head">内容 (Markdown编辑器)</div>
-      <div class="markdown">
-        <textarea class="markdown_input" v-model="content" @input="update"></textarea>
-        <div class="markdown_compiled" v-html="compiledMarkdown()"></div>
-        <div class="clear"></div>
+      <div class="edit_head">内容</div>
+      <div id="div3">
+        <!-- <el-input placeholder="请输入内容" v-model="editorContent" v-html="editorContent"></el-input> -->
       </div>
       <div class="save_button">
-        <el-button type="primary" @click="saveArticle">保存</el-button>
+        <el-button type="primary" @click="saveArticle">确定</el-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import _ from 'lodash'
-import marked from 'marked'
-import hightlight from 'highlight.js'
-import '../../assets/atom-one-light.css'
+// import _ from 'lodash'
+// import marked from 'marked'
+// import hightlight from 'highlight.js'
+import '@/assets/atom-one-light.css'
 import { apiUrl } from '@/api/config'
-marked.setOptions({
-  hightlight: function (code) {
-    return hightlight.hightlightAuto(code).value
-  }
-})
+var E = require('wangeditor')
+var editor = new E('#div3')
+
 export default {
-  name: 'articleEdit',
   data () {
     return {
       title: '',
       date: '',
       content: '',
+      editorContent: '',
       gist: '',
       labels: [],
       inputVisible: false,
@@ -75,32 +72,32 @@ export default {
     }
   },
   activated () {
-    console.log(this.$route.params.id)
-    if (this.$route.params.id) {
-      this.$http.get(apiUrl + '/api/articleDetail/' + this.$route.params.id).then(
-        response => {
-          let article = response.body
-          this.title = article.title
-          this.date = article.date
-          this.content = article.content
-          this.gist = article.gist
-          this.labels = article.labels
-        },
-        response => console.log(response)
-      )
-    }
+    this.getDetailFn()
   },
   mounted () {
+    editor.customConfig.onchange = (html) => {
+      this.editorContent = html
+    }
+    editor.create()
   },
   methods: {
-    // 编译Markdown
-    compiledMarkdown () {
-      return marked(this.content, {sanitize: true})
+    // 获取详情
+    getDetailFn () {
+      if (this.$route.params.id) {
+        this.$http.get(apiUrl + '/api/articleDetail/' + this.$route.params.id).then(
+          response => {
+            let article = response.body
+            this.title = article.title
+            this.date = article.date
+            this.editorContent = article.content
+            this.gist = article.gist
+            this.labels = article.labels
+            editor.txt.html('<p>' + this.editorContent + '</p>')
+          },
+          response => console.log(response)
+        )
+      }
     },
-    // 延时赋值给content
-    update: _.debounce(function (e) {
-      this.content = e.target.value
-    }, 300),
     // 获取发表时间
     getDate () {
       let mydate, y, m, d, hh, mm, ss
@@ -129,7 +126,7 @@ export default {
         })
         return
       }
-      if (this.content.length === 0) {
+      if (!this.editorContent) {
         this.$notify({
           title: '提醒',
           message: '请输入内容',
@@ -151,7 +148,8 @@ export default {
           _id: this.$route.params.id,
           title: this.title,
           date: this.date,
-          content: this.content,
+          content: this.editorContent,
+          coverImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555330499&di=976f17f85d03f8b5a4c3f539c55a2d19&imgtype=jpg&er=1&src=http%3A%2F%2Fhuafans.dbankcloud.com%2Fpic%2F2017%2F07%2F21%2Fc41a15c05434098ac3d596fc058841aa_IMG_20170721_124529.jpg%3Fmode%3Ddownload',
           gist: this.gist,
           labels: this.labels
         }
@@ -175,8 +173,8 @@ export default {
         let obj = {
           title: this.title,
           date: this.date,
-          content: this.content,
-          coverImg: 'http://pic1.win4000.com/wallpaper/6/57beb9d2bb240.jpg',
+          content: this.editorContent,
+          coverImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555330499&di=976f17f85d03f8b5a4c3f539c55a2d19&imgtype=jpg&er=1&src=http%3A%2F%2Fhuafans.dbankcloud.com%2Fpic%2F2017%2F07%2F21%2Fc41a15c05434098ac3d596fc058841aa_IMG_20170721_124529.jpg%3Fmode%3Ddownload',
           gist: this.gist,
           labels: this.labels
         }
@@ -197,7 +195,7 @@ export default {
     },
     // 保存成功后跳转至文章列表页
     refreshArticleList () {
-      this.$router.push('/admin/articleList')
+      this.$router.push({ name: 'articleList' })
     },
     goBack () {
       this.$router.go(-1)
@@ -222,78 +220,93 @@ export default {
 }
 </script>
 
-<style>
-  .edit_wrap {
-    padding: 40px;
+<style lang="stylus" rel="stylesheet/stylus">
+  .edit_wrapper {
+    padding: 40px 100px;
     font-size: 16px;
-  }
+    h2 {
+      text-align: center;
+    }
+    .return_button {
+      text-align: left;
+      margin-bottom: 40px;
+    }
+    .tag_wrap {
+      text-align: left;
+      padding: 20px 0;
+    }
+    .tag_wrap .input-new-tag {
+      width: 80px;
+      height: 28px;
+    }
+    textarea {
+      outline: none;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    .edit_head {
+      margin: 10px 0;
+      text-align: left;
+    }
+    #div3 {
+      margin: 10px 0;
+    }
+    .markdown {
+      text-align: left;
+      border: 1px solid #bfcbd9;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      width: 100%;
+      height: 800px;
+      vertical-align: top;
+      background: #f5f7f9;
+      overflow: hidden;
+    }
 
-  .return_button {
-    text-align: left;
-    margin-bottom: 40px;
-  }
+    .markdown textarea {
+      border: none;
+      resize: none;  /*不可拖动*/
+    }
 
-  .tag_wrap {
-    text-align: left;
-    padding: 20px 0;
-  }
-
-  .tag_wrap .input-new-tag {
-    width: 80px;
-    height: 28px;
-  }
-
-  .edit_wrap textarea {
-    outline: none;
-    font-size: 16px;
-  }
-
-  .edit_head {
-    margin: 20px 0;
-    text-align: left;
-  }
-
-  .markdown {
-    text-align: left;
-    border: 1px solid #bfcbd9;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    width: 100%;
-    height: 800px;
-    vertical-align: top;
-    background: #f5f7f9;
-    overflow: hidden;
-  }
-
-  .markdown textarea {
-    border: none;
-    resize: none;  /*不可拖动*/
-  }
-
-  .markdown_input {
-    float: left;
-    display: inline-block;
-    width: 49%;
-    height: 98%;
-    background-color: white;
-    padding-left: 1%;
-    padding-top: 1%;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-  }
-
-  .markdown_compiled {
-    overflow: auto;
-    float: right;
-    display: inline-block;
-    width: 49%;
-    height: 100%;
-    padding: 5px 0 5px 1%;
-  }
-
-  .save_button {
-    padding: 40px 0;
+    .markdown_input {
+      float: left;
+      display: inline-block;
+      width: 49%;
+      height: 98%;
+      background-color: white;
+      padding-left: 1%;
+      padding-top: 1%;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+    }
+    .markdown_compiled {
+      overflow: auto;
+      float: right;
+      display: inline-block;
+      width: 49%;
+      height: 100%;
+      padding: 5px 0 5px 1%;
+    }
+    #div3 {
+      position: relative;
+      z-index: 0;
+      .el-input {
+        position: absolute;
+        width: 98%;
+        left: 0;
+        padding: 0 10px;
+        height: 99%;
+        z-index: 1;
+        .el-input__inner {
+          border: none;
+          height: 100%;
+        }
+      }
+    }
+    .save_button {
+      padding: 40px 0;
+    }
   }
 </style>

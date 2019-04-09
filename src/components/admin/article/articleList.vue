@@ -2,7 +2,7 @@
   <div class="list-warpper">
     <sidebar/>
     <div class="list-warp">
-      <!-- <el-button class="add-btn" @click="articleEdit()">编写日志</el-button> -->
+      <el-button class="add-btn" @click="articleEdit()">编写推文</el-button>
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <!-- <span>推荐列表</span> -->
@@ -21,10 +21,10 @@
         </div>
         <div class="text item">
           <ul>
-            <li v-for="(item, index) in diaryList" :key="index">
+            <li v-for="(item, index) in articleList" :key="index">
               <span>{{item.title}}</span>
               <span v-html="item.content">{{item.content}}</span>
-              <span><img v-if="item.images.length" :src='item.images[0]'/></span>
+              <span><img :src='item.coverImg'/></span>
               <span v-if="item.labels && item.labels.length === 0">未分类</span>
               <span v-else>
                 <el-tag class="tag_margin" type="primary" v-for="tag in item.labels" :key="tag">{{ tag }}</el-tag>
@@ -49,30 +49,34 @@ import { apiUrl } from '@/api/config'
 export default {
   data () {
     return {
-      diaryList: [] // 日志列表
+      articleList: []
     }
   },
   mounted: function () {
-    // 获取日志列表
-    this.getDiaryList()
+    // 获取文章列表
+    this.$http.get(apiUrl + '/api/articleList').then(
+      response => { this.articleList = response.body.reverse() },
+      response => console.log(response)
+    )
   },
   methods: {
-    // 获取日志列表
-    getDiaryList () {
-      this.$http.get(apiUrl + '/api/diaryList').then(
-        response => { this.diaryList = response.body.reverse() },
-        response => console.log(response)
-      )
+    // 跳转至文章编辑页
+    articleEdit: function (id) {
+      if (id) {
+        this.$router.push('/admin/article/articleEdit/' + id)
+      } else {
+        this.$router.push('/admin/article/articleEdit')
+      }
     },
-    // 删除日志
+    // 删除文章
     deleteArticle: function (id) {
       let self = this
-      this.$confirm('此操作将永久删除该日志, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除该文章, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        self.$http.post(apiUrl + '/api/admin/deleteDiary', {
+        self.$http.post(apiUrl + '/api/admin/deleteArticle', {
           _id: id
         }).then(
           response => {
@@ -95,8 +99,8 @@ export default {
     },
     // 更新数据
     fetchData: function () {
-      this.$http.get(apiUrl + '/api/diaryList').then(
-        response => { this.diaryList = response.body.reverse() },
+      this.$http.get(apiUrl + '/api/articleList').then(
+        response => { this.articleList = response.body.reverse() },
         response => console.log(response)
       )
     }
@@ -115,6 +119,7 @@ export default {
     position: fixed;
     height: 100%;
     overflow-x: hidden;
+    overflow: scroll;
     display: flex;
     width: 100%;
     margin: 50px 0;
@@ -162,6 +167,7 @@ export default {
             span {
               width: 26%;
               display: flex;
+              align-items: center
               white-space: nowrap;
               text-overflow: ellipsis;
               padding: 0 5px;

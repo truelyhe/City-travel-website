@@ -2,7 +2,7 @@
   <div class="list-warpper">
     <sidebar/>
     <div class="list-warp">
-      <el-button class="add-btn" @click="articleEdit()">编写推文</el-button>
+      <!-- <el-button class="add-btn" @click="articleEdit()">编写日志</el-button> -->
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <!-- <span>推荐列表</span> -->
@@ -21,17 +21,17 @@
         </div>
         <div class="text item">
           <ul>
-            <li v-for="(item, index) in articleList" :key="index">
+            <li v-for="(item, index) in diaryList" :key="index">
               <span>{{item.title}}</span>
-              <span>{{item.content}}</span>
-              <span><img :src='item.coverImg'/></span>
+              <span v-html="item.content">{{item.content}}</span>
+              <span><img v-if="item.images.length" :src='item.images[0]'/></span>
               <span v-if="item.labels && item.labels.length === 0">未分类</span>
               <span v-else>
                 <el-tag class="tag_margin" type="primary" v-for="tag in item.labels" :key="tag">{{ tag }}</el-tag>
               </span>
               <span>{{item.date}}</span>
               <span>
-                <a @click="articleEdit(item._id)">编辑</a>
+                <a @click="articleEdit(item._id)"></a>
                 <a @click="deleteArticle(item._id)">删除</a>
               </span>
             </li>
@@ -47,37 +47,32 @@ import sidebar from '@/base/sidebar.vue'
 import { apiUrl } from '@/api/config'
 
 export default {
-  name: 'article',
   data () {
     return {
-      articleList: []
+      diaryList: [] // 日志列表
     }
   },
   mounted: function () {
-    // 获取文章列表
-    this.$http.get(apiUrl + '/api/articleList').then(
-      response => { this.articleList = response.body.reverse() },
-      response => console.log(response)
-    )
+    // 获取日志列表
+    this.getDiaryList()
   },
   methods: {
-    // 跳转至文章编辑页
-    articleEdit: function (id) {
-      if (id) {
-        this.$router.push('/admin/articleEdit/' + id)
-      } else {
-        this.$router.push('/admin/articleEdit')
-      }
+    // 获取日志列表
+    getDiaryList () {
+      this.$http.get(apiUrl + '/api/diaryList').then(
+        response => { this.diaryList = response.body.reverse() },
+        response => console.log(response)
+      )
     },
-    // 删除文章
+    // 删除日志
     deleteArticle: function (id) {
       let self = this
-      this.$confirm('此操作将永久删除该文章, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除该日志, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        self.$http.post(apiUrl + '/api/admin/deleteArticle', {
+        self.$http.post(apiUrl + '/api/admin/deleteDiary', {
           _id: id
         }).then(
           response => {
@@ -100,8 +95,8 @@ export default {
     },
     // 更新数据
     fetchData: function () {
-      this.$http.get(apiUrl + '/api/articleList').then(
-        response => { this.articleList = response.body.reverse() },
+      this.$http.get(apiUrl + '/api/diaryList').then(
+        response => { this.diaryList = response.body.reverse() },
         response => console.log(response)
       )
     }
@@ -171,6 +166,9 @@ export default {
               text-overflow: ellipsis;
               padding: 0 5px;
               overflow: hidden;
+              p {
+                margin: 0;
+              }
               span {
                 width: 90%;
               }
@@ -184,15 +182,8 @@ export default {
                 text-align: right;
                 cursor: pointer;
               }
-              .edit:hover {
-                background: limegreen;
-                color: white;
-                font-weight: 600;
-              }
-              .delete:hover {
-                background: red;
-                color: white;
-                font-weight: 600;
+              a:hover {
+                color: #409eff;
               }
             }
           }
