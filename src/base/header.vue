@@ -4,6 +4,17 @@
       <div class="logo-title">
         <img src="../assets/trip.png"/>
         <span class="title">济南旅游网</span>
+        <div class="login-text">
+          <span @click="tologinPage" v-if="!userInfo">注册 / 登录</span>
+          <div v-else>
+            <!-- <img v-if="userInfo.avatarCount === 1" src="@/assets/avatar/none.jpg"/>
+            <img v-if="userInfo.avatarCount === 2" src="@/assets/avatar/boy.jpeg"/>
+            <img v-if="userInfo.avatarCount === 3" src="@/assets/avatar/girl.jpeg"/>
+            <p v-if="userInfo">{{userInfo.name}}</p> -->
+            <span>欢迎您 {{userInfo.name}}</span>
+            <span @click="clearUser">退出登录</span>
+          </div>
+        </div>
       </div>
       <div class="nav-tab">
         <span :class="{active: switchIndex === 0}" @click="toIndex()">首页</span>
@@ -20,8 +31,14 @@
 
 <script>
 export default {
-  props: {
-    switchIndex: Number
+  data () {
+    return {
+      userInfo: ''
+    }
+  },
+  created () {
+    console.log(JSON.parse(sessionStorage.getItem('userInfo')), '999')
+    this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
   },
   methods: {
     // 跳转到首页
@@ -54,56 +71,73 @@ export default {
     },
     // 跳转到登录页
     tologinPage () {
-      this.$router.push('/admin/signin')
+      this.$router.push({name: 'login'})
+    },
+    // 退出登录
+    clearUser () {
+      sessionStorage.clear()
+      this.userInfo = ''
     }
+  },
+  props: {
+    switchIndex: Number
   }
-  // props: {
-  //   switchIndex: 0
-  // }
 }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
   .left_menu {
     text-align: center;
+    position: relative
     .menu_name {
       background: #409EFF;
       color: #fff;
-      padding: 20px 0 10px;
+      padding-top: 20px;
       width: 100%;
       align-items: center;
       .logo-title {
         display: flex;
         justify-content: center;
         .title {
-          font-size: 20px;
+          font-size: 22px;
           text-align: right;
           line-height: 40px;
-          letter-spacing: 2px;
+          letter-spacing: 6px;
         }
         img {
           width: 40px;
           height: 40px;
           margin-right: 10px;
         }
+        .login-text {
+          position: absolute;
+          right: 20px;
+          span {
+            font-size: 18px;
+            cursor pointer
+          }
+        }
       }
       .nav-tab {
         display: flex;
         justify-content: center;
-        padding-top: 10px;
-        font-size: 14px;
+        padding-top: 15px;
+        font-size: 18px;
         span {
           letter-spacing: 2px;
-          padding: 0 15px;
+          padding: 5px 15px;
           color: #fff;
           cursor: pointer;
+          margin: 0 10px;
         }
         span:hover {
-          color: #000;
+           background: #fff;
+           color: #409EFF;
         }
         .active {
-          background: #fff;
-          color: #409eff;
+          background: #3c97f5b3;
+          color: #fff;
+          border-bottom: 3px solid #fff;
         }
       }
     }

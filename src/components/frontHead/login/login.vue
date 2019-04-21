@@ -2,26 +2,28 @@
   <div class="sign_wrapper">
     <img src="@/assets/login-bg.jpg"/>
     <div class="sign_wrap">
-      <h1 v-if="!isRegister">济南旅游网站</h1>
-      <h1 v-if="isRegister">注册</h1>
-      <el-input v-model="name" placeholder="请输入用户名"></el-input>
-      <el-input v-model="password" placeholder="请输入密码" type="password"></el-input>
-      <el-input v-model="password2" v-if="isRegister" placeholder="确认密码" type="password"></el-input>
-      <div class="avatar-warp" v-if="isRegister">
-        选择头像:
-        <el-radio-group v-model="selectAvatar">
-          <el-radio :label="1"><img src="@/assets/avatar/none.jpg"/></el-radio>
-          <el-radio :label="2"><img src="@/assets/avatar/boy.jpeg"/></el-radio>
-          <el-radio :label="3"><img src="@/assets/avatar/girl.jpeg"/></el-radio>
-        </el-radio-group>
-      </div>
-      <div class="sign-btn" v-if="!isRegister">
-        <el-button @click="toRegister">注册</el-button>
-        <el-button type="primary" @click="signin">登录</el-button>
-      </div>
-      <div class="sign-btn" v-if="isRegister">
-        <el-button @click="goBackFn">返回</el-button>
-        <el-button @click="registerFn">确定</el-button>
+      <h1 v-if="!isRegister">用户登录</h1>
+      <h1 v-if="isRegister">用户注册</h1>
+      <div class="sign-content">
+        <el-input v-model="name" placeholder="请输入用户名"></el-input>
+        <el-input v-model="password" placeholder="请输入密码" type="password"></el-input>
+        <el-input v-model="password2" v-if="isRegister" placeholder="确认密码" type="password"></el-input>
+        <div class="avatar-warp" v-if="isRegister">
+          选择头像 :
+          <el-radio-group v-model="selectAvatar">
+            <el-radio :label="1"><img src="@/assets/avatar/none.jpg"/></el-radio>
+            <el-radio :label="2"><img src="@/assets/avatar/boy.jpeg"/></el-radio>
+            <el-radio :label="3"><img src="@/assets/avatar/girl.jpeg"/></el-radio>
+          </el-radio-group>
+        </div>
+        <div class="sign-btn" v-if="!isRegister">
+          <el-button @click="toRegister">注册</el-button>
+          <el-button type="primary" @click="signin">登录</el-button>
+        </div>
+        <div class="sign-btn" v-if="isRegister">
+          <el-button @click="goBackFn">返回</el-button>
+          <el-button type="primary" @click="registerFn">确定</el-button>
+        </div>
       </div>
     </div>
   </div>
@@ -134,9 +136,9 @@ export default {
                   type: 'success'
                 })
                 delete _this.password
-                localStorage.setItem('userInfo', JSON.stringify(obj))
+                sessionStorage.setItem('userInfo', JSON.stringify(obj))
                 this.$router.push({
-                  name: 'magazine'
+                  path: '/'
                 })
               },
               response => console.log('登录失败' + response)
@@ -166,28 +168,37 @@ export default {
       z-index: -1;
     }
     .sign_wrap {
-      width: 300px;
+      width: 320px;
       margin: 200px auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
       h1 {
-        color: #383a42;
+        color: #fff;
         padding: 10px;
         text-align: center;
+        background: #409eff;
+        letter-spacing: 3px;
+        margin: 0;
       }
-      .el-input, .sign-btn {
-        padding-top: 20px;
-        text-align: center;
-        .submit-btn {
-          width: 120px;
+      .sign-content {
+        padding: 25px;
+        .el-input, .sign-btn {
+          padding-top: 20px;
+          text-align: center;
+          .submit-btn {
+            width: 120px;
+          }
         }
-      }
-      .avatar-warp {
-        padding: 20px 0;
-        .el-radio-group {
-          .el-radio {
-            padding-right: 25px;
-            img {
-              width: 35px;
-              height: 35px;
+        .avatar-warp {
+          padding: 20px 0;
+          .el-radio-group {
+            padding-top:12px;
+            .el-radio {
+              padding-right: 25px;
+              img {
+                width: 35px;
+                height: 35px;
+              }
             }
           }
         }

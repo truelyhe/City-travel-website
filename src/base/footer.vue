@@ -1,6 +1,6 @@
 <template>
   <div class="footer-warpper">
-    <div class="menu_name">
+    <div class="foot_name">
       <h5>Copyright © 2019   鲁ICP备19000708号</h5>
     </div>
   </div>
@@ -37,7 +37,7 @@ export default {
     background: #f5f7f9;
   }
 
-  .menu_name {
+  .foot_name {
     background: #409EFF;
     color: white;
     padding: 5px 0;

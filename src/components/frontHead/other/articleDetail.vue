@@ -17,7 +17,7 @@
         </span>
       </div>
       <img class="article_detail_img" v-if="article.coverImg" :src="article.coverImg"/>
-      <div class="article_detail_content">{{article.content}}</div>
+      <div class="article_detail_content" v-html="article.content">{{article.content}}</div>
     </div>
     <Footer/>
   </div>
@@ -40,7 +40,8 @@ export default {
   activated () {
     let id = this.$route.params.id
     let state = this.$route.params.state
-    let behindUrl = state === 0 ? '/api/newDetail/' : state === 1 ? '/api/noticeDetail/' : '/api/articleDetail/'
+    console.log(state === '1')
+    let behindUrl = state === '0' ? '/api/newDetail/' : state === '1' ? '/api/noticeDetail/' : '/api/articleDetail/'
     this.getDetailFn(id, behindUrl)
   },
   methods: {
@@ -82,6 +83,7 @@ export default {
       margin: 30px auto 50px;
       background: #fff;
       text-align: center;
+      min-height: 482px;
       .article_detail_title {
         cursor: default;
         padding: 20px 0 10px;
@@ -89,7 +91,7 @@ export default {
       }
       .article_info {
         span {
-          margin: 5px 0;
+          margin: 5px 2px;
           color: #9b9b9b;
           font-size: 14px;
         }
@@ -103,6 +105,8 @@ export default {
         padding: 30px 20px;
         font-size: 16px;
         white-space: pre-wrap;
+        letter-spacing: 2px;
+        text-indent: 2rem;
       }
     }
   }

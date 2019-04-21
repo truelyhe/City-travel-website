@@ -59,7 +59,7 @@ export default {
   data () {
     return {
       diaryList: [], // 日志列表
-      userInfo: {}, // 个人信息
+      userInfo: '', // 个人信息
       avatarUrl: '', // 头像
       visible2: false,
       isHeigh: true // 内容显示高度
@@ -72,8 +72,8 @@ export default {
   methods: {
     // 获取个人信息
     getUserInfo () {
-      if (localStorage.getItem('userInfo')) {
-        const name = JSON.parse(localStorage.getItem('userInfo')).name
+      if (sessionStorage.getItem('userInfo')) {
+        const name = JSON.parse(sessionStorage.getItem('userInfo')).name
         this.$http.get(apiUrl + '/api/admin/getUser/' + name).then(
           response => {
             this.userInfo = response.body

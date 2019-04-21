@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
+var formidable = require("formidable")
 const fs = require('fs')
+// const url = require('url')
 const path = require('path')
 const db = require('./db')
 const check = require('./check')
@@ -19,7 +21,7 @@ router.post('/api/admin/signup', function (req, res) {
   })
 })
 
-// 登录
+// 用户登录
 router.post('/api/admin/signin', function (req, res) {
   // req.session.user = req.body.userInfo
   res.send()
@@ -36,7 +38,36 @@ router.get('/api/admin/getUser/:name', function (req, res) {
   })
 })
 
-
+// 获取所有用户
+router.get('/api/admin/getAllUser', function (req, res) {
+  db.User.find({}, function (err, docs) {
+    if (err) {
+      console.error(err)
+      return
+    }
+    res.json(docs)
+  })
+})
+ 
+// 图片上传服务器
+router.post('/upload', function(req, res){
+  const form = new formidable.IncomingForm()
+  const targetFile = path.join(__dirname,'./upload') // 图片存放位置
+  form.uploadDir = targetFile
+  form.parse(req, function(err, fields, files) {
+    if(err) throw err
+    const oldpath = files.sampleFile.path // 修改图片名字
+    const newpath = path.join(path.dirname(oldpath),files.sampleFile.name)
+    fs.rename(oldpath,newpath,(err) => {
+      if(err) throw err
+      const content =  fs.readFile(newpath, "binary")
+      res.writeHead(200, "Ok")
+      res.write(content, "binary") //格式必须为 binary，否则会出错
+      res.end('图片上传成功！')
+      // res.send()
+    })
+  })
+})
 
 
 // 获取所有文章

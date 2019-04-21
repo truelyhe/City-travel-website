@@ -3,11 +3,13 @@
     <img src="@/assets/sign-in-bg.png"/>
     <div class="sign_wrap">
       <h1>后台管理</h1>
-      <el-input v-model="name" placeholder="请输入用户名"></el-input>
-      <el-input v-model="password" placeholder="请输入密码" type="password"></el-input>
-      <div class="sign-btn">
-        <!-- <el-button @click="signup">注册</el-button> -->
-        <el-button type="primary" @click="signin">登录</el-button>
+      <div class="sign-content">
+        <el-input v-model="name" placeholder="请输入用户名"></el-input>
+        <el-input v-model="password" placeholder="请输入密码" type="password"></el-input>
+        <div class="sign-btn">
+          <!-- <el-button @click="signup">注册</el-button> -->
+          <el-button type="primary" @click="signin">登录</el-button>
+        </div>
       </div>
     </div>
   </div>
@@ -130,18 +132,24 @@ export default {
       z-index: -1;
     }
     .sign_wrap {
-      width: 300px;
+      width: 320px;
       margin: 200px auto;
       h1 {
-        color: #383a42;
+        color: #fff;
         padding: 10px;
         text-align: center;
+        background: #409eff;
+        letter-spacing: 3px;
+        margin: 0;
       }
-      .el-input, .sign-btn {
-        padding-top: 20px;
-        text-align: center;
-        .el-button--primary {
-          width: 100px;
+      .sign-content {
+        padding: 25px;
+        .el-input, .sign-btn {
+          padding-top: 20px;
+          text-align: center;
+          .el-button--primary {
+            width: 100px;
+          }
         }
       }
     }

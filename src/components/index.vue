@@ -21,10 +21,10 @@
               <span></span>
               <p>城市要闻</p>
             </div>
-            <div class="decribe-right" @click="toMorePage(0)">更多 >></div>
+            <div class="decribe-right" @click="toMorePage('0')">更多 >></div>
           </div>
           <ul>
-            <li v-for="(item, index) in newsList.slice(0, 8)" :key="index" @click="articleDetail(0, item._id)">
+            <li v-for="(item, index) in newsList.slice(0, 8)" :key="index" @click="articleDetail('0', item._id)">
               <span>{{item.title}}</span>
               <span>{{item.date.split(' ')[0]}}</span>
             </li>
@@ -36,10 +36,10 @@
               <span></span>
               <p>通知公告</p>
             </div>
-          <div class="decribe-right" @click="toMorePage(1)">更多 >></div>
+          <div class="decribe-right" @click="toMorePage('1')">更多 >></div>
           </div>
           <ul>
-            <li v-for="(item, index) in noticeList.slice(0, 8)" :key="index" @click="articleDetail(1, item._id)">
+            <li v-for="(item, index) in noticeList.slice(0, 8)" :key="index" @click="articleDetail('1', item._id)">
               <span>{{item.title}}</span>
               <span>{{item.date.split(' ')[0]}}</span>
             </li>
@@ -52,13 +52,13 @@
             <span></span>
             <p>今日推荐</p>
           </div>
-          <div class="decribe-right" @click="toMorePage(2)">更多 >></div>
+          <div class="decribe-right" @click="toMorePage('2')">更多 >></div>
         </div>
         <div class="recommand-list">
           <el-row>
             <el-col :span="8" v-for="(item, index) in articleList.slice(0, 3)" :key="index" :offset="index > 0 ? 2 : 0">
               <el-card :body-style="{ padding: '0px' }">
-                <div @click="articleDetail(2, item._id)">
+                <div @click="articleDetail('2', item._id)">
                   <img :src="item.coverImg" class="image">
                   <div style="padding: 14px;">
                     <span>{{ item.title }}</span>
@@ -311,6 +311,7 @@ export default {
   .image {
     width: 100%;
     display: block;
+    height: 250px;
   }
 
   .clearfix:before,

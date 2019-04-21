@@ -5,40 +5,56 @@
         <el-button icon="arrow-left" size="small" @click="goBack">返回</el-button>
       </div>
       <h2>发布推文</h2>
-      <div class="edit_head">标题</div>
+      <div class="edit_head">标题:</div>
       <el-input v-model="title" placeholder="请输入标题"></el-input>
       <div class="tag_wrap">
         <span>标签: </span>
         <el-tag
-            class="tag_margin"
-            :key="tag"
-            v-for="tag in labels"
-            :closable="true"
-            :close-trasition="true"
-            @close="handleClose(tag)"
+          class="tag_margin"
+          :key="tag"
+          v-for="tag in labels"
+          :closable="true"
+          :close-trasition="true"
+          @close="handleClose(tag)"
             type="primary"
         >{{ tag }}
         </el-tag>
         <el-input
-            class="input-new-tag"
-            v-if="inputVisible"
-            v-model="inputValue"
-            ref="saveTagInput"
-            size="mini"
-            @keyup.enter.native="handleInputConfirm"
-            @blur="handleInputConfirm"
+          class="input-new-tag"
+          v-if="inputVisible"
+          v-model="inputValue"
+          ref="saveTagInput"
+          size="mini"
+          @keyup.enter.native="handleInputConfirm"
+          @blur="handleInputConfirm"
         >
         </el-input>
         <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
       </div>
-      <div class="edit_head">简介</div>
-      <el-input
+      <div class="edit_head">
+        <span>简介:</span>
+        <el-input
           type="textarea"
           :rows="5"
           placeholder="请输入简介"
           v-model="gist">
-      </el-input>
-      <div class="edit_head">内容</div>
+        </el-input>
+        封面图:
+        <div class="cover-img">
+          <form
+            target="posthere"
+            ref='uploadForm'
+            id='uploadForm'
+            action='http://localhost:3000/upload'
+            method='post'
+            encType="multipart/form-data">
+            <input id="file" type="file" name="sampleFile" @change="changeImg"/>
+          </form>
+          <iframe name="posthere" frameborder=0 width=0 height=0></iframe>
+        </div>
+     </div>
+      <!-- <input type="file" accept="image/jpg" @change="changeAvatar"/> -->
+      <div class="edit_head">内容:</div>
       <div id="div3">
         <!-- <el-input placeholder="请输入内容" v-model="editorContent" v-html="editorContent"></el-input> -->
       </div>
@@ -61,12 +77,13 @@ var editor = new E('#div3')
 export default {
   data () {
     return {
-      title: '',
-      date: '',
-      content: '',
+      title: '', // 标题
+      date: '', // 时间
+      content: '', // 内容
       editorContent: '',
-      gist: '',
-      labels: [],
+      gist: '', // 简介
+      labels: [], // 标签
+      coverImg: '', // 封面图
       inputVisible: false,
       inputValue: ''
     }
@@ -115,9 +132,14 @@ export default {
       if (ss < 10) ss = '0' + ss
       this.date = y + '-' + m + '-' + d + ' ' + hh + ':' + mm + ':' + ss
     },
+    changeImg (e) {
+      // console.log(window.URL.createObjectURL(e.target.files[0]))
+      // // this.coverImg = e.target.files[0].name
+      // this.coverImg = window.URL.createObjectURL(e.target.files[0])
+    },
     // 保存文章
     saveArticle () {
-      let self = this
+      // let self = this
       if (this.title.length === 0) {
         this.$notify({
           title: '提醒',
@@ -142,56 +164,62 @@ export default {
         })
         return
       }
-      if (this.$route.params.id) {
-        // 更新文章
-        let obj = {
-          _id: this.$route.params.id,
-          title: this.title,
-          date: this.date,
-          content: this.editorContent,
-          coverImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555330499&di=976f17f85d03f8b5a4c3f539c55a2d19&imgtype=jpg&er=1&src=http%3A%2F%2Fhuafans.dbankcloud.com%2Fpic%2F2017%2F07%2F21%2Fc41a15c05434098ac3d596fc058841aa_IMG_20170721_124529.jpg%3Fmode%3Ddownload',
-          gist: this.gist,
-          labels: this.labels
-        }
-        this.$http.post('/api/admin/updateArticle', {
-          articleInformation: obj
-        }).then(
-          response => {
-            self.$message({
-              message: '更新文章成功',
-              type: 'success'
-            })
-            // 更新完成后跳转至该文章的详情页
-            self.$router.push('/articleDetail/' + self.$route.params.id)
-          },
-          response => console.log(response)
-        )
-      } else {
-        // 新建文章
-        // 获取时间
-        this.getDate()
-        let obj = {
-          title: this.title,
-          date: this.date,
-          content: this.editorContent,
-          coverImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555330499&di=976f17f85d03f8b5a4c3f539c55a2d19&imgtype=jpg&er=1&src=http%3A%2F%2Fhuafans.dbankcloud.com%2Fpic%2F2017%2F07%2F21%2Fc41a15c05434098ac3d596fc058841aa_IMG_20170721_124529.jpg%3Fmode%3Ddownload',
-          gist: this.gist,
-          labels: this.labels
-        }
-        this.$http.post(apiUrl + '/api/admin/saveArticle', {
-          articleInformation: obj
-        }).then(
-          response => {
-            self.$message({
-              message: '发表文章成功',
-              type: 'success'
-            })
-            // 保存成功后跳转至文章列表页
-            self.refreshArticleList()
-          },
-          response => console.log(response)
-        )
-      }
+      document.getElementById('uploadForm').submit() // 表单提交
+      this.$http.get('/upload').then(
+        response => {
+          this.coverImg = response
+          console.log(response, 'yy')
+        })
+      // if (this.$route.params.id) {
+      //   // 更新文章
+      //   let obj = {
+      //     _id: this.$route.params.id,
+      //     title: this.title,
+      //     date: this.date,
+      //     content: this.editorContent,
+      //     coverImg: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555330499&di=976f17f85d03f8b5a4c3f539c55a2d19&imgtype=jpg&er=1&src=http%3A%2F%2Fhuafans.dbankcloud.com%2Fpic%2F2017%2F07%2F21%2Fc41a15c05434098ac3d596fc058841aa_IMG_20170721_124529.jpg%3Fmode%3Ddownload',
+      //     gist: this.gist,
+      //     labels: this.labels
+      //   }
+      //   this.$http.post('/api/admin/updateArticle', {
+      //     articleInformation: obj
+      //   }).then(
+      //     response => {
+      //       self.$message({
+      //         message: '更新文章成功',
+      //         type: 'success'
+      //       })
+      //       // 更新完成后跳转至该文章的详情页
+      //       self.$router.push('/articleDetail/' + self.$route.params.id)
+      //     },
+      //     response => console.log(response)
+      //   )
+      // } else {
+      //   // 新建文章
+      //   // 获取时间
+      //   this.getDate()
+      //   let obj = {
+      //     title: this.title,
+      //     date: this.date,
+      //     content: this.editorContent,
+      //     coverImg: this.coverImg,
+      //     gist: this.gist,
+      //     labels: this.labels
+      //   }
+      //   this.$http.post(apiUrl + '/api/admin/saveArticle', {
+      //     articleInformation: obj
+      //   }).then(
+      //     response => {
+      //       self.$message({
+      //         message: '发表文章成功',
+      //         type: 'success'
+      //       })
+      //       // 保存成功后跳转至文章列表页
+      //       self.refreshArticleList()
+      //     },
+      //     response => console.log(response)
+      //   )
+      // }
     },
     // 保存成功后跳转至文章列表页
     refreshArticleList () {
@@ -247,6 +275,24 @@ export default {
     .edit_head {
       margin: 10px 0;
       text-align: left;
+      display: flex;
+      .el-textarea {
+        width: 500px;
+        margin-right: 50px;
+      }
+      .cover-img {
+        position: relative;
+        margin-left: 20px;
+        .el-icon-plus {
+          border: 1px solid #dcdfe6;
+          padding: 70px 120px;
+        }
+        form {
+          input {
+            cursor pointer
+          }
+        }
+      }
     }
     #div3 {
       margin: 10px 0;

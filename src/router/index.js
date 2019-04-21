@@ -20,6 +20,7 @@ import CityNews from '@/components/admin/news/cityNews'
 import NewsAdd from '@/components/admin/addPage'
 import NoticeManage from '@/components/admin/notice/noticeManage'
 import DiaryManage from '@/components/admin/diary/diaryManage'
+import UserManage from '@/components/admin/userManage/userManage'
 import Signin from '@/components/admin/signin/signin'
 
 Vue.use(Router)
@@ -125,6 +126,11 @@ export default new Router({
       path: '/admin/diary/diaryManage',
       name: 'diaryManage',
       component: DiaryManage
+    },
+    {
+      path: '/admin/diary/userManage',
+      name: 'userManage',
+      component: UserManage
     },
     {
       path: '/admin/signin/signin',

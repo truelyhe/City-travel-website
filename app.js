@@ -5,6 +5,8 @@ const bodyParse = require('body-parser')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const router = require('./server/router')
+// 引入七牛云配置
+const qnconfig = require('./server/qiniu')
 // const news = require('./server/news')
 const app = express()
 
@@ -24,6 +26,12 @@ app.use(bodyParse.json())
 app.use(bodyParse.urlencoded({ extended: true }))
 app.use(router)
 // app.use(news)
+
+// 处理请求
+// app.get('/token', (req, res, next) => {
+//   console.log(qnconfig.uploadToken)
+//   res.status(200).send(qnconfig.uploadToken)
+// })
 
 // session
 app.set('trust proxy', 1) // trust first proxy

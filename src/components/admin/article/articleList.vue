@@ -24,7 +24,8 @@
             <li v-for="(item, index) in articleList" :key="index">
               <span>{{item.title}}</span>
               <span v-html="item.content">{{item.content}}</span>
-              <span><img :src='item.coverImg'/></span>
+              <span><img :src="item.coverImg"/></span>
+              <!-- <span><img :src="url"/></span> -->
               <span v-if="item.labels && item.labels.length === 0">未分类</span>
               <span v-else>
                 <el-tag class="tag_margin" type="primary" v-for="tag in item.labels" :key="tag">{{ tag }}</el-tag>
@@ -49,7 +50,8 @@ import { apiUrl } from '@/api/config'
 export default {
   data () {
     return {
-      articleList: []
+      articleList: [],
+      url: 'blob:http://localhost:3001/63e483ac-09ef-43f0-a62f-75d722ed5a16'
     }
   },
   mounted: function () {

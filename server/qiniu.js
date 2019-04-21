@@ -7,7 +7,8 @@ let secretKey = 'N53ZXJ6m4l7CcxiG8buVMimafOXmXsDYiPxVk6IY';
 let mac = new qiniu.auth.digest.Mac(accessKey, secretKey);
 
 let options = {
-  scope: bucket //七牛资源目录
+  scope: bucket, //七牛资源目录
+  expires: 7200
 };
 let putPolicy = new qiniu.rs.PutPolicy(options);
 let uploadToken = putPolicy.uploadToken(mac);
@@ -15,4 +16,6 @@ console.log(uploadToken, 'token');
 //把uploadToken返回给客户端
 
 //生成上传 Token
-token = uptoken(bucket)
+module.exports = {
+  uploadToken
+}

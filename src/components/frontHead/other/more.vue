@@ -8,13 +8,14 @@
     <div class="hotel-warpper">
       <ul v-if="page === 1">
         <li v-for="(item,index) in moreList" :key="index">
-          <div class="list-item" @click="articleDetail(0, item._id)">
-            <img v-if="mark === 0" src="http://119.164.252.163:88/images/0531/05310b7d474a-e4f3-4f2e-a25a-842a4893284a/S20190408094048.jpg"/>
-            <img v-if="mark === 1" src="https://timgsa.baidu.com/timg?image&quality=80&size=b10000_10000&sec=1554710195&di=3456b8d741e2955538c673326619aab0&src=http://m.tuniucdn.com/fb2/t1/G1/M00/CF/FC/Cii9EVao2fWIZ-BzAGXI-DOGQXsAABp6QEtX8gAZckQ528_w700_h0_c0_t0.jpg"/>
+          <div class="list-item" @click="articleDetail(mark, item._id)">
+            <img v-if="mark === '0'" src="http://119.164.252.163:88/images/0531/05310b7d474a-e4f3-4f2e-a25a-842a4893284a/S20190408094048.jpg"/>
+            <img v-if="mark === '1'" src="https://timgsa.baidu.com/timg?image&quality=80&size=b10000_10000&sec=1554710195&di=3456b8d741e2955538c673326619aab0&src=http://m.tuniucdn.com/fb2/t1/G1/M00/CF/FC/Cii9EVao2fWIZ-BzAGXI-DOGQXsAABp6QEtX8gAZckQ528_w700_h0_c0_t0.jpg"/>
             <img v-if="item.coverImg" :src="item.coverImg"/>
             <!-- <img :src="item.pic"/> -->
             <div class="describe">
               <span class="title">{{item.title}}</span>
+              <span class="gist" v-if="item.coverImg">{{item.gist}}</span>
               <span class="address">{{item.date}}</span>
             </div>
           </div>
@@ -49,9 +50,9 @@ export default {
   },
   activated () {
     this.mark = this.$route.query.mark
-    if (this.mark === 0) {
+    if (this.mark === '0') {
       this.getNewsListFn()
-    } else if (this.mark === 1) {
+    } else if (this.mark === '1') {
       this.getNoticeListFn()
     } else {
       this.getArticleListFn()
@@ -134,18 +135,22 @@ export default {
             display: flex;
             cursor: pointer
             img{
-              width:170px;
               height:120px;
+              max-width: 170px;
             }
             .describe{
               display:flex;
               flex-direction:column;
               padding-left: 25px;
               span{
-                  padding-bottom:9px;
+                padding-bottom:9px;
               }
               .title{
-                  font-size:20px;
+                font-size:20px;
+              }
+              .gist {
+                font-size:18px;
+                color: #4a4a4a;
               }
               .address{
                 color: #9b9b9b;
