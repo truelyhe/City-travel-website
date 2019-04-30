@@ -48,7 +48,7 @@
             action='http://localhost:3000/upload'
             method='post'
             encType="multipart/form-data">
-            <input id="file" type="file" name="sampleFile" @change="changeImg"/>
+            <input id="file" type="file" accept="image/*" name="sampleFile" @change="changeImg"/>
           </form>
           <iframe name="posthere" frameborder=0 width=0 height=0></iframe>
         </div>

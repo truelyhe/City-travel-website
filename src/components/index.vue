@@ -81,7 +81,7 @@
 <script type="text/ecmascript-6">
 import Header from '@/base/header'
 import Footer from '@/base/footer'
-import { apiUrl } from '@/api/config'
+import { getApiRequest } from '@/api/apiRequest'
 
 export default {
   name: 'Article',
@@ -121,24 +121,21 @@ export default {
   methods: {
     // 获取新闻列表
     getNewsListFn () {
-      this.$http.get(apiUrl + '/api/newsList').then(
-        response => { this.newsList = response.body.reverse() },
-        response => console.log(response)
-      )
+      getApiRequest('/api/newsList').then((res) => {
+        this.newsList = res.reverse()
+      })
     },
     // 获取通知列表
     getNoticeListFn () {
-      this.$http.get(apiUrl + '/api/noticeList').then(
-        response => { this.noticeList = response.body.reverse() },
-        response => console.log(response)
-      )
+      getApiRequest('/api/noticeList').then((res) => {
+        this.noticeList = res.reverse()
+      })
     },
     // 获取推荐列表
     getArticleListFn () {
-      this.$http.get(apiUrl + '/api/articleList').then(
-        response => { this.articleList = response.body.reverse() },
-        response => console.log(response)
-      )
+      getApiRequest('/api/articleList').then((res) => {
+        this.articleList = res.reverse()
+      })
     },
     // 浏览更多
     toMorePage (mark) {

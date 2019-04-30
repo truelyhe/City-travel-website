@@ -90,17 +90,21 @@
 <script type="text/ecmascript-6">
 import Header from '@/base/header'
 import Footer from '@/base/footer'
-// import { apiUrl } from '@/api/config'
+import { getApiRequest } from '@/api/apiRequest'
 
 export default {
   data () {
     return {
       inputHeight: false,
       inputValue: '',
-      page: 1
+      page: 1,
+      messageList: []
     }
   },
-  mounted () {
+  created () {
+    getApiRequest('/api/messageList').then((res) => {
+      this.messageList = res.reverse()
+    })
   },
   methods: {
     // 改变输入框高度
@@ -108,7 +112,6 @@ export default {
       this.inputHeight = true
     },
     lowHeightFn () {
-      console.log('aaa')
       this.inputHeight = false
     },
     // 发布留言

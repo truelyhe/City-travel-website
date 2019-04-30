@@ -25,13 +25,6 @@ app.use('/dist', express.static(resolve('./dist')))
 app.use(bodyParse.json())
 app.use(bodyParse.urlencoded({ extended: true }))
 app.use(router)
-// app.use(news)
-
-// 处理请求
-// app.get('/token', (req, res, next) => {
-//   console.log(qnconfig.uploadToken)
-//   res.status(200).send(qnconfig.uploadToken)
-// })
 
 // session
 app.set('trust proxy', 1) // trust first proxy

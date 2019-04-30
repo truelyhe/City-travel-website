@@ -261,4 +261,37 @@ router.post('/api/admin/deleteDiary', function (req, res) {
   })
 })
 
+// 发布留言
+router.post('/api/admin/pubMessage', function (req, res) {
+  new db.Message(req.body.messageInformation).save(function (err) {
+    if (err) {
+      res.status(500).send()
+      return
+    }
+    res.send()
+  })
+})
+
+// 获取留言列表
+router.get('/api/messageList', function (req, res) {
+  db.Message.find({}, function (err, docs) {
+    if (err) {
+      console.error(err)
+      return
+    }
+    res.json(docs)
+  })
+})
+
+// 删除日志
+router.post('/api/admin/deleteMessage', function (req, res) {
+  db.Message.remove({_id: req.body._id}, function (err) {
+    if (err) {
+      res.status(500).send()
+      return
+    }
+    res.send()
+  })
+})
+
 module.exports = router
