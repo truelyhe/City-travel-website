@@ -48,13 +48,20 @@ const messageSchema = new mongoose.Schema({
   usercount: Number
 })
 
+const foodSchema = new mongoose.Schema({
+  title: String,
+  gist: String,
+  images: String
+})
+
 const Models = {
   User: mongoose.model('User', userSchema),
   Article: mongoose.model('Article', articleSchema),
   News: mongoose.model('News', newsSchema),
   Notice: mongoose.model('Notice', noticeSchema),
   Diary: mongoose.model('Diary', diarySchema),
-  Message: mongoose.model('Message', messageSchema)
+  Message: mongoose.model('Message', messageSchema),
+  Foods: mongoose.model('Foods', foodSchema)
 }
 
 module.exports = Models

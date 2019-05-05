@@ -162,9 +162,14 @@ export default {
               width: 60px;
               a {
                 cursor: pointer;
+                color: #FFF;
+                background-color: #F56C6C;
+                border-color: #F56C6C;
+                padding: 7px 15px;
+                border-radius: 3px;
               }
               a:hover {
-                color: #409eff;
+                color: #eaeaea;
               }
             }
           }

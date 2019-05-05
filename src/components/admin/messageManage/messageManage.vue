@@ -1,22 +1,21 @@
 <template>
-  <div class="news-list-warpper">
+  <div class="notice-list-warpper">
     <sidebar/>
     <div class="list-warp">
-      <el-button class="add-btn" @click="toAddNews">添加要闻</el-button>
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span>城市要闻</span>
+          <span>用户留言</span>
           <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
         </div>
         <div class="text item">
           <ul>
-            <li v-for="(item, index) in newsList" :key="index">
-              <span>{{item.title}}</span>
+            <li v-for="(item, index) in messageList" :key="index">
+              <span>{{item.username}}</span>
               <span>{{item.content}}</span>
               <span style="width: 160px">{{item.date}}</span>
               <span class="edit-btn">
                 <!-- <a @click="newEdit(item._id)">编辑</a> -->
-                <a @click="deleteNew(item._id)">删除</a>
+                <a @click="deleteNoticeFn(item._id)">删除</a>
               </span>
             </li>
           </ul>
@@ -29,46 +28,34 @@
 <script>
 import sidebar from '@/base/sidebar.vue'
 import { apiUrl } from '@/api/config'
+import { getApiRequest } from '@/api/apiRequest'
 
 export default {
   data () {
     return {
-      newsList: []
+      messageList: []
     }
   },
   mounted () {
-    this.getNewsList()
+    this.getMessageList()
   },
   methods: {
-    // 获取新闻列表
-    getNewsList () {
-      this.$http.get(apiUrl + '/api/newsList').then(
-        response => {
-          if (response.body) {
-            this.newsList = response.body.reverse()
-          }
-        },
-        response => console.log(response)
-      )
-    },
-    // 添加新闻
-    toAddNews () {
-      let query = {fromNew: true}
-      this.$router.push({
-        name: 'newsAdd',
-        query: query
+    // 获取留言列表
+    getMessageList () {
+      getApiRequest('/api/messageList').then((res) => {
+        this.messageList = res.reverse()
       })
     },
     newEdit () {},
-    // 删除新闻
-    deleteNew (id) {
+    // 删除留言
+    deleteNoticeFn (id) {
       let self = this
-      this.$confirm('此操作将永久删除该新闻, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除该通知, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        self.$http.post(apiUrl + '/api/admin/deleteNew', {
+        self.$http.post(apiUrl + '/api/admin/deleteMessage', {
           _id: id
         }).then(
           response => {
@@ -76,8 +63,7 @@ export default {
               type: 'success',
               message: '删除成功!'
             })
-            self.getNewsList()
-            self.fetchData()
+            self.getMessageList()
           },
           response => {
             console.log(response)
@@ -101,7 +87,7 @@ export default {
   .main {
     text-align: left;
   }
-  .news-list-warpper {
+  .notice-list-warpper {
     position: fixed;
     height: 100%;
     overflow-x: hidden;

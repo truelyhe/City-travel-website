@@ -17,57 +17,41 @@
         </div>
       </div>
       <div class="nav-tab">
-        <span :class="{active: switchIndex === 0}" @click="toIndex()">首页</span>
-        <span :class="{active: switchIndex === 1}" @click="toImpressionPage()">印象济南</span>
-        <span :class="{active: switchIndex === 2}" @click="toTouristPage()">景区景点</span>
-        <span :class="{active: switchIndex === 3}" @click="toFoodPage()">餐饮美食</span>
-        <span :class="{active: switchIndex === 4}"  @click="toQuarterPage()">住宿指南</span>
-        <span :class="{active: switchIndex === 5}" @click="toMagazinePage()">游客日志</span>
-        <span :class="{active: switchIndex === 6}" @click="toMessagePage()">留言板</span>
+        <span :class="{active: switchIndex === 0}" @click="skipPageFn('index')">首页</span>
+        <span :class="{active: switchIndex === 1}" @click="skipPageFn('impression')">印象济南</span>
+        <span :class="{active: switchIndex === 2}" @click="skipPageFn('tourist')">景区景点</span>
+        <span :class="{active: switchIndex === 3}" @click="skipPageFn('food')">餐饮美食</span>
+        <span :class="{active: switchIndex === 4}" @click="skipPageFn('hotel')">住宿指南</span>
+        <span :class="{active: switchIndex === 5}" @click="skipPageFn('magazine')">游客日志</span>
+        <span :class="{active: switchIndex === 6}" @click="skipPageFn('message')">留言板</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+
 export default {
   data () {
     return {
       userInfo: ''
     }
   },
-  created () {
-    console.log(JSON.parse(sessionStorage.getItem('userInfo')), '999')
-    this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+  activated () {
+    this.getUserInfo()
   },
   methods: {
-    // 跳转到首页
-    toIndex () {
-      this.$router.push({name: 'index'})
+    // 获取个人信息
+    getUserInfo () {
+      if (sessionStorage.getItem('userInfo')) {
+        this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+      } else {
+        this.userInfo = ''
+      }
     },
-    // 跳转到印象济南页面
-    toImpressionPage () {
-      this.$router.push({name: 'impression'})
-    },
-    // 跳转到景区景点页面
-    toTouristPage () {
-      this.$router.push({name: 'tourist'})
-    },
-    // 跳转到餐饮美食页面
-    toFoodPage () {
-      this.$router.push({name: 'food'})
-    },
-    // 跳转到住宿指南页面
-    toQuarterPage () {
-      this.$router.push({name: 'hotel'})
-    },
-    // 跳转到游客日志页面
-    toMagazinePage () {
-      this.$router.push({name: 'magazine'})
-    },
-    // 跳转到留言板页面
-    toMessagePage () {
-      this.$router.push({name: 'message'})
+    // 跳转页面
+    skipPageFn (pageName) {
+      this.$router.push({name: pageName})
     },
     // 跳转到登录页
     tologinPage () {
@@ -77,6 +61,9 @@ export default {
     clearUser () {
       sessionStorage.clear()
       this.userInfo = ''
+      if (this.switchIndex === 5) {
+        window.location.reload()
+      }
     }
   },
   props: {
@@ -92,12 +79,13 @@ export default {
     .menu_name {
       background: #409EFF;
       color: #fff;
-      padding-top: 20px;
       width: 100%;
       align-items: center;
       .logo-title {
         display: flex;
         justify-content: center;
+        padding: 20px 0;
+        align-items: center;
         .title {
           font-size: 22px;
           text-align: right;
@@ -121,23 +109,22 @@ export default {
       .nav-tab {
         display: flex;
         justify-content: center;
-        padding-top: 15px;
         font-size: 18px;
+        background: #fff;
         span {
           letter-spacing: 2px;
           padding: 5px 15px;
-          color: #fff;
+          color: #409EFF;
           cursor: pointer;
           margin: 0 10px;
         }
         span:hover {
-           background: #fff;
-           color: #409EFF;
+           background: #409EFF;
+           color: #fff;
         }
         .active {
-          background: #3c97f5b3;
+          background: #409EFF;
           color: #fff;
-          border-bottom: 3px solid #fff;
         }
       }
     }

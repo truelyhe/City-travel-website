@@ -7,71 +7,23 @@
     <div @click="lowHeightFn()">
       <div class="message-warp" @click.stop>
         <div>
-          <el-input placeholder="留下些什么吧~~" v-model="inputValue" :style="{height: inputHeight ? '150px' : '50px'}" @focus="changeInputFn()"></el-input>
+          <el-input type="textarea" placeholder="留下些什么吧~~" v-model="inputValue" :rows="inputHeight ? 5 : 2" @focus="changeInputFn()"></el-input>
         </div>
         <div class="pub-btn">
           <el-button type="primary" v-if="inputHeight" @click="pubMessageFn()">发布</el-button>
         </div>
         <div class="hotel-warpper">
-          <ul v-if="page === 1">
-              <li>
-                <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1554737480834&di=3dc1d8a937e99cd58d32f5d6f27e993e&imgtype=0&src=http%3A%2F%2Fimg1.touxiang.cn%2Fuploads%2F20130406%2F06-035922_449.jpg"/>
-                <div class="describe">
-                <span class="title">伊宁先生</span>
-                  <span class="address">美食</span>
-                  <span class="price">宽厚里的美食小吃确实很多，不过在节假日建议大家要早点去哦，人会很多！</span>
-                </div>
-              </li>
-              <li>
-                <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555332273&di=568c26fcfd10a2b7aa5a1e8e3ed10cc7&imgtype=jpg&er=1&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2Fa72d9295597ae757d9912e36477605638f4bdfe128e3-zAk9VK_fw236"/>
-                <div class="describe">
-                <span class="title">皮卡丘</span>
-                  <span class="address">住宿</span>
-                  <span class="price">芙蓉街附近的民俗别有一番风味，而且离附近景点很近</span>
-                </div>
-              </li>
-              <li>
-                <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3203872256,1562775343&fm=26&gp=0.jpg"/>
-                <div class="describe">
-                <span class="title">曾小贤</span>
-                  <span class="address">景点</span>
-                  <span class="price">大明湖果然别有一番风味，夏天去能感受到大明湖畔的夏雨荷，哈哈哈</span>
-                </div>
-              </li>
-              <li>
-                <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555332318&di=d70fcd983860d41eb7eb8e54089a640d&imgtype=jpg&er=1&src=http%3A%2F%2Fwww.ghost64.com%2Fqqtupian%2FzixunImg%2Flocal%2F2017%2F11%2F24%2F15114947944332.jpg"/>
-                <div class="describe">
-                <span class="title">刘尚理</span>
-                  <span class="address">美食</span>
-                  <span class="price">强烈推荐芙蓉街里的一家小吃-芙蓉泉烤鸡爪</span>
-                </div>
-              </li>
-            </ul>
-            <ul v-if="page === 2">
-              <li>
-                <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1554547281553&di=da513c8514fbbe39b10fa0c59118f3a2&imgtype=0&src=http%3A%2F%2Fimage.qmango.com%2Fhotelimg%2Fc2%2F286035%2F%25E5%25A4%25A7%25E5%25BA%258A2%25E7%25B1%25B32.jpg"/>
-                <div class="describe">
-                <span class="title">济南·精品公寓酒店</span>
-                  <span class="address">历城区唐冶西路868号山东设计创意产业园北区A1-1栋1711房</span>
-                  <span class="price">￥180</span>
-                </div>
-              </li>
-                <li>
-                <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1554547281550&di=293f1602564450cb2060852546af9589&imgtype=0&src=http%3A%2F%2Fimage.qmango.com%2Fhotelimg%2Fc2%2F185183%2F%25E8%25B1%25AA%25E5%258D%258E%25E5%25A4%25A7%25E5%25BA%258A%25E6%2588%25BF1.jpg"/>
-                <div class="describe">
-                <span class="title">泉城印象·精品公寓酒店</span>
-                  <span class="address">历城区唐冶西路868号山东设计创意产业园北区A1-1栋1711房</span>
-                  <span class="price">￥180</span>
-                </div>
-              </li>
-                <li>
-                <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1554547281548&di=8867940355f8de4334a87119fb23feab&imgtype=0&src=http%3A%2F%2Fimage.qmango.com%2Fhotelimg%2Fdl1210%2F125936%2F29.jpeg"/>
-                <div class="describe">
-                <span class="title">泉城印象·精品公寓酒店</span>
-                  <span class="address">历城区唐冶西路868号山东设计创意产业园北区A1-1栋1711房</span>
-                  <span class="price">￥180</span>
-                </div>
-              </li>
+          <ul>
+            <li  v-for="(item, index) in messageList" :key="index">
+              <img v-if="item.usercount === 1" src="@/assets/avatar/none.jpg"/>
+              <img v-if="item.usercount === 2" src="@/assets/avatar/boy.jpeg"/>
+              <img v-if="item.usercount === 3" src="@/assets/avatar/girl.jpeg"/>
+              <div class="describe">
+              <span class="title">{{item.username}}</span>
+                <span class="address">美食</span>
+                <span class="price">{{item.content}}</span>
+              </div>
+            </li>
           </ul>
         </div>
       </div>
@@ -80,31 +32,31 @@
       <el-pagination
         @current-change="handleCurrentChange"
         layout="prev, pager, next"
-        :total="20">
+        :total="messageList.length">
       </el-pagination>
     </div>
     <Footer/>
+    <!-- <el-button :plain="true">{{tipValue}}</el-button> -->
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import Header from '@/base/header'
 import Footer from '@/base/footer'
-import { getApiRequest } from '@/api/apiRequest'
+import { getApiRequest, postApiRequest } from '@/api/apiRequest'
+import { setTimeout } from 'timers'
 
 export default {
   data () {
     return {
       inputHeight: false,
-      inputValue: '',
-      page: 1,
-      messageList: []
+      inputValue: '', // 输入内容
+      messageList: [] // 留言列表
+      // tipValue: '' // 消息提示文字
     }
   },
   created () {
-    getApiRequest('/api/messageList').then((res) => {
-      this.messageList = res.reverse()
-    })
+    this.getMessageList()
   },
   methods: {
     // 改变输入框高度
@@ -114,17 +66,53 @@ export default {
     lowHeightFn () {
       this.inputHeight = false
     },
+    // 获取留言列表
+    getMessageList () {
+      getApiRequest('/api/messageList').then((res) => {
+        this.messageList = res.reverse()
+      })
+    },
     // 发布留言
     pubMessageFn () {
-      // console.log(this.inputValue.replace(/[^\x00-\xff]/g, '01').length)
+      const that = this
+      this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+      if (!this.userInfo) {
+        that.openModel('需要先登录才能发布留言喔!', 'warning')
+        return false
+      }
+      if (!this.inputValue) {
+        that.openModel('请输入内容!', 'warning')
+        return false
+      }
+      let obj = {
+        content: this.inputValue,
+        username: this.userInfo.name,
+        usercount: this.userInfo.avatarCount
+      }
+      postApiRequest('/api/pubMessage', obj).then((res) => {
+        setTimeout(() => {
+          that.openModel('发布成功', 'success')
+          that.getMessageList()
+          that.inputHeight = false
+          that.inputValue = ''
+        }, 2000)
+      })
     },
+    // 弹窗
+    openModel (message, type) {
+      this.$message({
+        message: message,
+        type: type
+      })
+    },
+    // 分页
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`)
-      if (val === 1) {
-        this.page = 1
-      } else {
-        this.page = 2
-      }
+      // if (val > 1) {
+      //   console.log()
+      //   this.messageList.slice(2)
+      //   console.log(this.messageList)
+      // }
     }
   },
   components: {

@@ -39,7 +39,7 @@
           <div class="detail-bottom">
             <h2>{{item.title}}</h2>
             <p :class="{text: isHeigh && item.status}" v-html="item.content">{{item.content}}</p>
-            <a v-if="item.status" href="javascript:;" @click="readAllFn()">{{isHeigh ? '展开全文' : '收起'}}</a>
+            <a v-if="item.status" href="javascript:;" @click="readAllFn(index)">{{isHeigh ? '展开全文' : '收起'}}</a>
             <div class="detail-img">
               <img v-for="(i, idx) in item.images" :key="idx" :src="i"/>
             </div>
@@ -60,26 +60,23 @@ export default {
     return {
       diaryList: [], // 日志列表
       userInfo: '', // 个人信息
-      avatarUrl: '', // 头像
       visible2: false,
       isHeigh: true // 内容显示高度
     }
   },
   created () {
-    this.getUserInfo()
     this.getDiaryList()
+  },
+  activated () {
+    this.getUserInfo()
   },
   methods: {
     // 获取个人信息
     getUserInfo () {
       if (sessionStorage.getItem('userInfo')) {
-        const name = JSON.parse(sessionStorage.getItem('userInfo')).name
-        this.$http.get(apiUrl + '/api/admin/getUser/' + name).then(
-          response => {
-            this.userInfo = response.body
-            this.avatarUrl = this.userInfo.avatarCount === 1 ? '@/assets/avatar/none.jpg' : this.userInfo.avatarCount === 2 ? '@/assets/avatar/boy.jpeg' : '@/assets/avatar/girl.jpeg'
-          }
-        )
+        this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+      } else {
+        this.userInfo = ''
       }
     },
     // 获取日志列表
@@ -112,7 +109,7 @@ export default {
       }
     },
     // 查看全文
-    readAllFn () {
+    readAllFn (index) {
       this.isHeigh = !this.isHeigh
     }
   },

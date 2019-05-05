@@ -12,7 +12,7 @@ import Magazine from '@/components/frontHead/magazine/magazine'
 import MagazineDetail from '@/components/frontHead/magazine/magazineDetail'
 import Hotel from '@/components/frontHead/hotel/hotel'
 import Message from '@/components/frontHead/message/message'
-import MessageDetail from '@/components/frontHead/message/messageDetail'
+// import MessageDetail from '@/components/frontHead/message/messageDetail'
 import About from '@/components/frontHead/other/about'
 import ArticleList from '@/components/admin/article/articleList'
 import ArticleEdit from '@/components/admin/article/articleEdit'
@@ -20,6 +20,7 @@ import CityNews from '@/components/admin/news/cityNews'
 import NewsAdd from '@/components/admin/addPage'
 import NoticeManage from '@/components/admin/notice/noticeManage'
 import DiaryManage from '@/components/admin/diary/diaryManage'
+import MessageManage from '@/components/admin/messageManage/messageManage'
 import UserManage from '@/components/admin/userManage/userManage'
 import Signin from '@/components/admin/signin/signin'
 
@@ -87,11 +88,11 @@ export default new Router({
       name: 'message',
       component: Message
     },
-    {
-      path: '/messageDetail',
-      name: 'messageDetail',
-      component: MessageDetail
-    },
+    // {
+    //   path: '/messageDetail',
+    //   name: 'messageDetail',
+    //   component: MessageDetail
+    // },
     {
       path: '/admin/article/articleList',
       name: 'articleList',
@@ -126,6 +127,11 @@ export default new Router({
       path: '/admin/diary/diaryManage',
       name: 'diaryManage',
       component: DiaryManage
+    },
+    {
+      path: '/admin/messageManage',
+      name: 'messageManage',
+      component: MessageManage
     },
     {
       path: '/admin/diary/userManage',

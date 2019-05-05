@@ -94,7 +94,7 @@ export default {
                   message: '注册成功',
                   type: 'success'
                 })
-                _this.setTimeout(() => {
+                setTimeout(() => {
                   _this.isRegister = false
                 }, 3000)
               },
@@ -108,16 +108,15 @@ export default {
     // 登录
     signin: function () {
       let _this = this
+      console.log(this.password.length, 'p')
       if (this.name.length < 6) {
         this.$message.error('用户名不能为空或小于六个字符')
         return
       }
-
       if (this.password.length < 6) {
         this.$message.error('密码不能为空或小于六个字符')
         return
       }
-
       this.$http.get(apiUrl + '/api/admin/getUser/' + this.name).then(
         response => {
           if (_this.password !== response.body.password) {
@@ -125,7 +124,8 @@ export default {
           } else {
             let obj = {
               name: _this.name,
-              password: _this.password
+              password: _this.password,
+              avatarCount: response.body.avatarCount
             }
             _this.$http.post(apiUrl + '/api/admin/signin', {
               userInfo: obj

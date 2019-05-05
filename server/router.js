@@ -48,6 +48,19 @@ router.get('/api/admin/getAllUser', function (req, res) {
     res.json(docs)
   })
 })
+
+// 删除某个用户
+router.post('/api/admin/deleteUser', function (req, res) {
+  db.User.remove({_id: req.body._id}, function (err) {
+    if (err) {
+      res.status(500).send()
+      return
+    }
+    res.send()
+  })
+})
+
+
  
 // 图片上传服务器
 router.post('/upload', function(req, res){
@@ -262,9 +275,9 @@ router.post('/api/admin/deleteDiary', function (req, res) {
 })
 
 // 发布留言
-router.post('/api/admin/pubMessage', function (req, res) {
-  new db.Message(req.body.messageInformation).save(function (err) {
-    if (err) {
+router.post('/api/pubMessage', function (req, res) {
+  new db.Message(req.body).save(function (err) {
+    if (err || !req.body) {
       res.status(500).send()
       return
     }
@@ -283,7 +296,7 @@ router.get('/api/messageList', function (req, res) {
   })
 })
 
-// 删除日志
+// 删除留言
 router.post('/api/admin/deleteMessage', function (req, res) {
   db.Message.remove({_id: req.body._id}, function (err) {
     if (err) {
@@ -291,6 +304,17 @@ router.post('/api/admin/deleteMessage', function (req, res) {
       return
     }
     res.send()
+  })
+})
+
+// 获取美食列表
+router.get('/api/foodList', function (req, res) {
+  db.Foods.find({}, function (err, docs) {
+    if (err) {
+      console.error(err)
+      return
+    }
+    res.json(docs)
   })
 })
 

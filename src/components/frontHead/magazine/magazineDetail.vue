@@ -99,7 +99,7 @@ export default {
       if (ss < 10) ss = '0' + ss
       this.date = y + '-' + m + '-' + d + ' ' + hh + ':' + mm + ':' + ss
     },
-    // 保存日志
+    // 发表日志
     saveArticle () {
       let txtLength = this.editorContent.replace(/[^\-\xff]/g, '01').length
       let self = this
@@ -153,7 +153,7 @@ export default {
     goBack () {
       this.$router.go(-1)
     },
-    // element标签组件
+    // 标签组件
     handleClose (tag) {
       this.labels.splice(this.labels.indexOf(tag), 1)
     },
