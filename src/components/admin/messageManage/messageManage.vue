@@ -10,7 +10,7 @@
         <div class="text item">
           <ul>
             <li v-for="(item, index) in messageList" :key="index">
-              <span>{{item.username}}</span>
+              <span>{{item.user.username}}</span>
               <span>{{item.content}}</span>
               <span style="width: 160px">{{item.date}}</span>
               <span class="edit-btn">

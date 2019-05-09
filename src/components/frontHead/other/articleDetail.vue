@@ -72,7 +72,7 @@ export default {
       margin: 30px 100px 0;
       font-size: 18px;
       .index-word {
-        .el-breadcrumb__item__inner {
+        .el-breadcrumb__inner {
           color: #409eff;
           cursor: pointer
         }
@@ -107,6 +107,9 @@ export default {
         white-space: pre-wrap;
         letter-spacing: 2px;
         text-indent: 2rem;
+        p {
+          text-align: center;
+        }
       }
     }
   }

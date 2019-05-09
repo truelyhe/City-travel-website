@@ -140,9 +140,9 @@ export default {
     // 保存成功后跳转至新闻列表页
     refreshList (state) {
       if (state) {
-        this.$router.push('/admin/cityNews')
+        this.$router.push({name: 'cityNews'})
       } else {
-        this.$router.push('/admin/noticeManage')
+        this.$router.push({name: 'noticeManage'})
       }
     },
     goBack: function () {

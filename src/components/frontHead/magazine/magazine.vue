@@ -13,33 +13,25 @@
         <p>此人很懒，什么也没留下</p>
       </div>
       <div>
-        <el-input v-if="userInfo" placeholder="分享下你的旅游干货吧~~~" @focus="toMagazineDetail()"></el-input>
-        <el-popover
-          v-if="!userInfo"
-          placement="top"
-          width="160"
-          v-model="visible2">
-          <p>登录之后才可以发表日志喔，确认登录吗？</p>
-          <div style="text-align: right; margin: 0">
-            <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
-            <el-button type="primary" size="mini" @click="toMagazineDetail()">确定</el-button>
-          </div>
-          <el-input slot="reference" placeholder="分享下你的旅游干货吧~~~"></el-input>
-        </el-popover>
+        <!-- <el-input v-if="userInfo" placeholder="分享下你的旅游干货吧~~~" @focus="toMagazineDetail()"></el-input> -->
+        <div @click="toMagazineDetail()">
+          <el-input placeholder="分享下你的旅游干货吧~~~"></el-input>
+        </div>
         <div class="detail" v-for="(item, index) in diaryList" :key="index">
           <div class="detail-top">
-            <img v-if="item.usercount === 1" src="@/assets/avatar/none.jpg"/>
-            <img v-if="item.usercount === 2" src="@/assets/avatar/boy.jpeg"/>
-            <img v-if="item.usercount === 3" src="@/assets/avatar/girl.jpeg"/>
+            <img v-if="item.user.usercount === 1" src="@/assets/avatar/none.jpg"/>
+            <img v-if="item.user.usercount === 2" src="@/assets/avatar/boy.jpeg"/>
+            <img v-if="item.user.usercount === 3" src="@/assets/avatar/girl.jpeg"/>
             <div class="top-right">
-              <span class="nickname">{{item.username}}</span>
-              <span>2019-04-02</span>
+              <span class="nickname">{{item.user.username}}</span>
+              <span>{{item.date}}</span>
             </div>
           </div>
           <div class="detail-bottom">
             <h2>{{item.title}}</h2>
-            <p :class="{text: isHeigh && item.status}" v-html="item.content">{{item.content}}</p>
-            <a v-if="item.status" href="javascript:;" @click="readAllFn(index)">{{isHeigh ? '展开全文' : '收起'}}</a>
+            <p v-html="item.content">{{item.content}}</p>
+            <!-- <p :class="{text: isHeigh && item.status}" v-html="item.content">{{item.content}}</p> -->
+            <!-- <a v-if="item.status" href="javascript:;" @click="readAllFn(index)">{{isHeigh ? '展开全文' : '收起'}}</a> -->
             <div class="detail-img">
               <img v-for="(i, idx) in item.images" :key="idx" :src="i"/>
             </div>
@@ -54,6 +46,7 @@
 import Header from '@/base/header'
 import Footer from '@/base/footer'
 import { apiUrl } from '@/api/config'
+import { Loading } from 'element-ui'
 
 export default {
   data () {
@@ -65,10 +58,11 @@ export default {
     }
   },
   created () {
-    this.getDiaryList()
+    // this.getDiaryList()
   },
   activated () {
     this.getUserInfo()
+    this.getDiaryList()
   },
   methods: {
     // 获取个人信息
@@ -81,10 +75,12 @@ export default {
     },
     // 获取日志列表
     getDiaryList () {
+      let loadingInstance = Loading.service({ fullscreen: true }) // 全屏加载
       this.$http.get(apiUrl + '/api/diaryList').then(
         response => {
           this.diaryList = response.body.reverse()
           this.getCountLines()
+          loadingInstance.close()
         },
         response => console.log(response)
       )
@@ -96,21 +92,27 @@ export default {
       // const lh = parseInt(styles.lineHeight, 10) // 获取行高
       // const lc = Math.round(h / lh) // 行数 = 整体高度/行高
     },
+    // 查看全文
+    readAllFn (index) {
+      this.isHeigh = !this.isHeigh
+    },
     // 跳转日志详情页
     toMagazineDetail () {
-      this.visible2 = false
       if (!this.userInfo) {
-        this.$router.push({name: 'login'})
+        this.$alert('登录之后才可以发表日志喔，是否确认登录?', '登录确认', {
+          confirmButtonText: '确定',
+          callback: action => {
+            if (action === 'confirm') {
+              this.$router.push({name: 'login'})
+            }
+          }
+        })
       } else {
         this.$router.push({
           name: 'magazineDetail',
           query: this.userInfo
         })
       }
-    },
-    // 查看全文
-    readAllFn (index) {
-      this.isHeigh = !this.isHeigh
     }
   },
   components: {

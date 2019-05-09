@@ -18,8 +18,7 @@
             <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1554547281553&di=da513c8514fbbe39b10fa0c59118f3a2&imgtype=0&src=http%3A%2F%2Fimage.qmango.com%2Fhotelimg%2Fc2%2F286035%2F%25E5%25A4%25A7%25E5%25BA%258A2%25E7%25B1%25B32.jpg"/>
             <div class="describe">
             <span class="title">山东舜和国际酒店</span>
-              <span class="address">历下区经十路26008号</span>
-              <span class="price">￥319</span>
+             <span class="price">￥319</span>
             </div>
           </li>
            <li>
@@ -38,9 +37,7 @@
               <span class="price">￥229</span>
             </div>
           </li>
-        </ul>
-        <ul v-if="page === 2">
-          <li>
+           <li>
             <img src="https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1554537190&di=c5f51f7b9fc9526030a1cdfec27732ee&src=http://gss0.baidu.com/-4o3dSag_xI4khGko9WTAnF6hhy/lvpics/h=800/sign=58edaedee8f81a4c3932e1c9e72b6029/203fb80e7bec54e7620f06b4ba389b504ec26abc.jpg"/>
             <div class="describe">
             <span class="title">济南新世纪商务酒店</span>
@@ -48,7 +45,9 @@
               <span class="price">￥269</span>
             </div>
           </li>
-            <li>
+        </ul>
+        <ul v-if="page === 2">
+          <li>
             <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1554547281555&di=4ae087627e8a7029d33f3b6533b4a142&imgtype=0&src=http%3A%2F%2Fimg.zx123.cn%2FResources%2Fzx123cn%2Fuploadfile%2F2017%2F0222%2F20170222165608_36883.jpg"/>
             <div class="describe">
             <span class="title">全季酒店</span>
@@ -125,6 +124,7 @@ export default {
     .hotel-warpper{
       width: 1024px;
       margin: 0 auto;
+      min-height: 425px;
       ul{
         li{
           display:flex;
@@ -137,19 +137,19 @@ export default {
             height:120px;
           }
           .describe{
-          display:flex;
-          flex-direction:column;
-          padding-left:50px;
-          span{
-            padding-bottom:9px;
-          }
-          .title{
-            font-size:25px;
-          }
-          .price{
-            font-size:20px;
-            color:red;
-          }
+            display:flex;
+            flex-direction:column;
+            padding-left:50px;
+            span{
+              padding-bottom:9px;
+            }
+            .title{
+              font-size:25px;
+            }
+            .price{
+              font-size:20px;
+              color:red;
+            }
           }
         }
       }

@@ -52,6 +52,7 @@ export default {
       this.isRegister = true
       this.name = ''
       this.password = ''
+      // delete this.password
     },
     goBackFn () {
       this.isRegister = false
@@ -85,7 +86,6 @@ export default {
               avatarCount: this.selectAvatar
               // avatar: this.selectAvatar === 1 ? '@/assets/avatar/none.jpg' : this.selectAvatar === 2 ? '@/assets/avatar/boy.jpeg' : '@/assets/avatar/girl.jpeg'
             }
-            console.log(obj)
             _this.$http.post(apiUrl + '/api/admin/signup', {
               userInfo: obj
             }).then(
@@ -108,7 +108,6 @@ export default {
     // 登录
     signin: function () {
       let _this = this
-      console.log(this.password.length, 'p')
       if (this.name.length < 6) {
         this.$message.error('用户名不能为空或小于六个字符')
         return

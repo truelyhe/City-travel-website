@@ -8,6 +8,11 @@ const userSchema = new mongoose.Schema({
   avatarCount: Number
 })
 
+const adminSchema = new mongoose.Schema({
+  account: String,
+  password: String
+})
+
 const articleSchema = new mongoose.Schema({
   title: String,
   date: String,
@@ -36,16 +41,13 @@ const diarySchema = new mongoose.Schema({
   labels: Array,
   status: Boolean,
   date: String,
-  // userid: String
-  username: String,
-  usercount: Number
+  user: {username: String, usercount: Number}
 })
 
 const messageSchema = new mongoose.Schema({
   content: String,
   date: String,
-  username: String,
-  usercount: Number
+  user: {username: String, usercount: Number}
 })
 
 const foodSchema = new mongoose.Schema({
@@ -56,6 +58,7 @@ const foodSchema = new mongoose.Schema({
 
 const Models = {
   User: mongoose.model('User', userSchema),
+  Admin: mongoose.model('Admin', adminSchema),
   Article: mongoose.model('Article', articleSchema),
   News: mongoose.model('News', newsSchema),
   Notice: mongoose.model('Notice', noticeSchema),

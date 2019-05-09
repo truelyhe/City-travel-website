@@ -15,12 +15,12 @@
         <div class="hotel-warpper">
           <ul>
             <li  v-for="(item, index) in messageList" :key="index">
-              <img v-if="item.usercount === 1" src="@/assets/avatar/none.jpg"/>
-              <img v-if="item.usercount === 2" src="@/assets/avatar/boy.jpeg"/>
-              <img v-if="item.usercount === 3" src="@/assets/avatar/girl.jpeg"/>
+              <img v-if="item.user.usercount === 1" src="@/assets/avatar/none.jpg"/>
+              <img v-if="item.user.usercount === 2" src="@/assets/avatar/boy.jpeg"/>
+              <img v-if="item.user.usercount === 3" src="@/assets/avatar/girl.jpeg"/>
               <div class="describe">
-              <span class="title">{{item.username}}</span>
-                <span class="address">美食</span>
+              <span class="title">{{item.user.username}}</span>
+                <!-- <span class="address">美食</span> -->
                 <span class="price">{{item.content}}</span>
               </div>
             </li>
@@ -70,6 +70,7 @@ export default {
     getMessageList () {
       getApiRequest('/api/messageList').then((res) => {
         this.messageList = res.reverse()
+        console.log(this.messageList[0].user.usercount)
       })
     },
     // 发布留言
@@ -86,8 +87,10 @@ export default {
       }
       let obj = {
         content: this.inputValue,
-        username: this.userInfo.name,
-        usercount: this.userInfo.avatarCount
+        user: {
+          username: this.userInfo.name,
+          usercount: this.userInfo.avatarCount
+        }
       }
       postApiRequest('/api/pubMessage', obj).then((res) => {
         setTimeout(() => {
@@ -157,8 +160,8 @@ export default {
             margin:10px 0;
             padding: 10px 15px;
             img{
-              width:80px;
-              height:80px;
+              width:70px;
+              height:70px;
               border-radius:50%;
             }
             .describe{

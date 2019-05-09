@@ -79,6 +79,7 @@ export default {
 
 <style lang="stylus" rel="stylesheet/stylus">
   .content {
+    background-color:#f1f1f1;
     .Promotional-language {
       padding-top: 10px;
       text-align: center;

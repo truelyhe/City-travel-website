@@ -129,8 +129,10 @@ export default {
         labels: this.labels,
         status: txtLength > 300,
         date: this.date,
-        username: this.$route.query.name,
-        usercount: this.$route.query.avatarCount
+        user: {
+          username: this.$route.query.name,
+          usercount: this.$route.query.avatarCount
+        }
       }
       this.$http.post(apiUrl + '/api/admin/saveDiary', {
         diaryInformation: obj

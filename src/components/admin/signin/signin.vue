@@ -16,10 +16,9 @@
 </template>
 
 <script>
-import { apiUrl } from '@/api/config'
+import { getApiRequest, ERR_OK } from '@/api/apiRequest'
 
 export default {
-  name: 'signin',
   data () {
     return {
       name: '',
@@ -31,89 +30,35 @@ export default {
 
   },
   methods: {
-    signup: function () {
-      let _this = this
-      if (this.name.length < 6) {
-        this.$message.error('用户名不能为空或小于六个字符')
-        return
-      }
-
-      if (this.password.length < 6) {
-        this.$message.error('密码不能为空或小于六个字符')
-        return
-      }
-
-      this.$http.get(apiUrl + '/api/admin/getUser/' + this.name).then(
-        response => {
-          if (response.body.name === _this.name) {
-            _this.$message.error('该用户已存在')
-            _this.name = ''
-            // 由于异步，name的改变比正常流执行得慢，所以不能通过判断name去执行是否post
-            // 所以我把post移入else中，而不是在外面通过判断name执行
-          } else {
-            let obj = {
-              name: _this.name,
-              password: _this.password
-            }
-
-            _this.$http.post(apiUrl + '/api/admin/signup', {
-              userInfo: obj
-            }).then(
-              response => {
-                _this.$message({
-                  message: '注册成功',
-                  type: 'success'
-                })
-              },
-              response => console.log('注册失败' + response)
-            )
-          }
-        },
-        response => console.log(response)
-      )
+    signup () {
     },
-    signin: function () {
+    signin () {
       let _this = this
-      if (this.name.length < 6) {
-        this.$message.error('用户名不能为空或小于六个字符')
-        return
+      if (!this.name || !this.password) {
+        this.$message.error('请输入登录账号和密码！')
+        return false
       }
-
-      if (this.password.length < 6) {
-        this.$message.error('密码不能为空或小于六个字符')
-        return
-      }
-
-      this.$http.get(apiUrl + '/api/admin/getUser/' + this.name).then(
-        response => {
-          if (_this.password !== response.body.password) {
-            _this.$message.error('用户名或密码不正确')
-          } else {
-            let obj = {
-              name: _this.name,
-              password: _this.password
-            }
-            _this.$http.post(apiUrl + '/api/admin/signin', {
-              userInfo: obj
-            }).then(
-              response => {
-                _this.$message({
-                  message: '登录成功',
-                  type: 'success'
-                })
-                delete _this.password
-                // _this.$router.go(-1)
-                this.$router.push({name: 'articleList'})
-              },
-              response => console.log('登录失败' + response)
-            )
-          }
-        },
-        response => {
-          _this.$message.error('该用户不存在')
-          return false
+      getApiRequest('/api/admin/managerLogin?account=' + this.name + '&password=' + this.password).then((res) => {
+        if (res.errno === ERR_OK) {
+          _this.$message({
+            message: '登录成功',
+            type: 'success'
+          })
+          delete _this.password
+          this.$router.push({name: 'articleList'})
+        } else if (res.errno === 401) {
+          _this.$message.error('登录失败,账号密码有误！')
+        } else {
+          _this.$message.error('服务器出错！')
         }
-      )
+      })
+    },
+    // 弹窗提示
+    showModel (text, type) {
+      this.$message({
+        message: text,
+        type: type
+      })
     }
   }
 }

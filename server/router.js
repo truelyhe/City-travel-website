@@ -14,7 +14,7 @@ const checkNotLogin = check.checkNotLogin
 router.post('/api/admin/signup', function (req, res) {
   new db.User(req.body.userInfo).save(function (err) {
     if (err) {
-      res.status(500).send()
+      res.status(500).json({ errno: 500, msg: '服务器出错' })
       return
     }
     res.send()
@@ -53,13 +53,28 @@ router.get('/api/admin/getAllUser', function (req, res) {
 router.post('/api/admin/deleteUser', function (req, res) {
   db.User.remove({_id: req.body._id}, function (err) {
     if (err) {
-      res.status(500).send()
+      res.status(500).json({ errno: 500, msg: '服务器出错' })
       return
     }
     res.send()
   })
 })
 
+// 管理员登录
+router.get('/api/admin/managerLogin', function (req, res) {
+  db.Admin.find({}, function (err, docs) {
+    if (err) {
+      res.status(500).json({ errno: 500, msg: '服务器出错' })
+      return
+    } else {
+      if (req.query.account === docs[0].account && req.query.password === docs[0].password) {
+        res.status(200).json({ errno: 0, msg: '账号密码正确' })
+      } else {
+        res.json({ errno: 401, msg: '账号密码错误' })
+      }
+    }
+  })
+})
 
  
 // 图片上传服务器
@@ -109,10 +124,10 @@ router.get('/api/articleDetail/:id', function (req, res) {
 router.post('/api/admin/saveArticle', function (req, res) {
   new db.Article(req.body.articleInformation).save(function (err) {
     if (err) {
-      res.status(500).send()
+      res.status(500).json({ errno: 500, msg: '服务器出错' })
       return
     }
-    res.send()
+    res.status(200).json({ errno: 0, msg: '发布成功' })
   })
 })
 
@@ -134,7 +149,7 @@ router.post('/api/admin/updateArticle', function (req, res) {
         res.status(500).send()
         return
       }
-      res.send()
+      res.status(200).json({ errno: 0, msg: '编辑成功' })
     })
   })
 })
@@ -143,10 +158,10 @@ router.post('/api/admin/updateArticle', function (req, res) {
 router.post('/api/admin/deleteArticle', function (req, res) {
   db.Article.remove({_id: req.body._id}, function (err) {
     if (err) {
-      res.status(500).send()
+      res.status(500).json({ errno: 500, msg: '服务器出错' })
       return
     }
-    res.send()
+    res.status(200).json({ errno: 0, msg: '删除成功' })
   })
 })
 
@@ -157,10 +172,10 @@ router.post('/api/admin/deleteArticle', function (req, res) {
 router.post('/api/admin/saveNews', function (req, res) {
   new db.News(req.body.newsInformation).save(function (err) {
     if (err) {
-      res.status(500).send()
+      res.status(500).json({ errno: 500, msg: '服务器出错' })
       return
     }
-    res.send()
+    res.status(200).json({ errno: 0, msg: '发布成功' })
   })
 })
 
@@ -190,10 +205,10 @@ router.get('/api/newDetail/:id', function (req, res) {
 router.post('/api/admin/deleteNew', function (req, res) {
   db.News.remove({_id: req.body._id}, function (err) {
     if (err) {
-      res.status(500).send()
+      res.status(500).json({ errno: 500, msg: '服务器出错' })
       return
     }
-    res.send()
+    res.status(200).json({ errno: 0, msg: '删除成功' })
   })
 })
 
@@ -201,10 +216,10 @@ router.post('/api/admin/deleteNew', function (req, res) {
 router.post('/api/admin/saveNotice', function (req, res) {
   new db.Notice(req.body.newsInformation).save(function (err) {
     if (err) {
-      res.status(500).send()
+      res.status(500).json({ errno: 500, msg: '服务器出错' })
       return
     }
-    res.send()
+    res.status(200).json({ errno: 0, msg: '发布成功' })
   })
 })
 
@@ -234,10 +249,10 @@ router.get('/api/noticeDetail/:id', function (req, res) {
 router.post('/api/admin/deleteNotice', function (req, res) {
   db.Notice.remove({_id: req.body._id}, function (err) {
     if (err) {
-      res.status(500).send()
+      res.status(500).json({ errno: 500, msg: '服务器出错' })
       return
     }
-    res.send()
+    res.status(200).json({ errno: 0, msg: '删除成功' })
   })
 })
 
@@ -245,10 +260,10 @@ router.post('/api/admin/deleteNotice', function (req, res) {
 router.post('/api/admin/saveDiary', function (req, res) {
   new db.Diary(req.body.diaryInformation).save(function (err) {
     if (err) {
-      res.status(500).send()
+      res.status(500).json({ errno: 500, msg: '服务器出错' })
       return
     }
-    res.send()
+    res.status(200).json({ errno: 0, msg: '发布成功' })
   })
 })
 
@@ -267,10 +282,10 @@ router.get('/api/diaryList', function (req, res) {
 router.post('/api/admin/deleteDiary', function (req, res) {
   db.Diary.remove({_id: req.body._id}, function (err) {
     if (err) {
-      res.status(500).send()
+      res.status(500).json({ errno: 500, msg: '服务器出错' })
       return
     }
-    res.send()
+    res.status(200).json({ errno: 0, msg: '删除成功' })
   })
 })
 
@@ -278,10 +293,10 @@ router.post('/api/admin/deleteDiary', function (req, res) {
 router.post('/api/pubMessage', function (req, res) {
   new db.Message(req.body).save(function (err) {
     if (err || !req.body) {
-      res.status(500).send()
+      res.status(500).json({ errno: 500, msg: '参数有误or服务器出错' })
       return
     }
-    res.send()
+    res.status(200).json({ errno: 0, msg: '发布成功' })
   })
 })
 
@@ -300,10 +315,10 @@ router.get('/api/messageList', function (req, res) {
 router.post('/api/admin/deleteMessage', function (req, res) {
   db.Message.remove({_id: req.body._id}, function (err) {
     if (err) {
-      res.status(500).send()
+      res.status(500).json({ errno: 500, msg: '服务器出错' })
       return
     }
-    res.send()
+    res.status(200).json({ errno: 0, msg: '删除成功' })
   })
 })
 

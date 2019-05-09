@@ -111,7 +111,7 @@ export default {
         this.$router.push({name: 'articleList'})
       }
       if (index === 3) {
-        this.$router.push({name: 'noticeManage'})
+        this.$router.push({name: 'diaryManage'})
       }
       if (index === 4) {
         this.$router.push({name: 'messageManage'})

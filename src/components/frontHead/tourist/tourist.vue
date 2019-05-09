@@ -1,14 +1,51 @@
 <template>
   <div class="content">
     <Header :switchIndex="2"/>
-    <div class="Promotional-language">
-      <h1>景区景点</h1>
-      <h4>济南，黄河之南，大明湖畔的“泉城”，有72名泉，自古就有“家家泉水，户户垂杨”之誉</h4>
-    </div>
-    <div class="tour" v-for="(item, index) in tourList" :key="index">
-      <h2>{{item.title}}</h2>
-      <p>{{item.decribe}}</p>
-      <img :src="item.img"/>
+    <div class="tour-warp">
+      <div class="left-item">
+        <div class="left-top left-search">
+          <p>景点搜索</p>
+          <el-select
+            v-model="searchValue"
+            filterable
+            remote
+            reserve-keyword
+            placeholder="请输入关键词"
+            :remote-method="remoteMethod"
+            :loading="loading">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+          <el-button type="primary" v-if="searchValue" @click="searchTourFn">搜索</el-button>
+        </div>
+        <div class="left-top">
+          <p>景点排行榜</p>
+        </div>
+        <ul>
+          <li v-for="(item, index) in rankList" :key="index">
+            <div class="first" :style="{background: item.id === 1 ? 'red' : item.id === 2 ? 'yellow' : item.id === 3 ? 'orange' : '',
+             color: item.id === 1 || item.id === 2 || item.id === 3 ? '#fff' : ''}">
+             <span>{{item.id}}</span>
+            </div>
+            {{item.name}}
+          </li>
+        </ul>
+      </div>
+      <div class="right-item">
+        <div class="Promotional-language">
+          <h1>景区景点</h1>
+          <h4>济南，黄河之南，大明湖畔的“泉城”，有72名泉，自古就有“家家泉水，户户垂杨”之誉</h4>
+        </div>
+        <div class="tour" v-for="(item, index) in searchList" :key="index">
+          <h2>{{item.title}}</h2>
+          <p>{{item.decribe}}</p>
+          <img :src="item.img"/>
+        </div>
+      </div>
     </div>
     <Footer/>
   </div>
@@ -22,6 +59,41 @@ import Footer from '@/base/footer'
 export default {
   data () {
     return {
+      searchValue: '', // 搜索值
+      options: [],
+      list: [],
+      loading: false,
+      rankList: [
+        {
+          id: 1,
+          name: '趵突泉'
+        },
+        {
+          id: 2,
+          name: '大明湖'
+        },
+        {
+          id: 3,
+          name: '千佛山'
+        },
+        {
+          id: 4,
+          name: '九如山瀑布群'
+        },
+        {
+          id: 5,
+          name: '红叶谷'
+        },
+        {
+          id: 6,
+          name: '泉城广场'
+        },
+        {
+          id: 7,
+          name: '黑虎泉'
+        }
+      ],
+      searchList: [],
       tourList: [
         {
           title: '趵突泉',
@@ -66,7 +138,42 @@ export default {
       ]
     }
   },
+  mounted () {
+    this.list = this.tourList.map(item => {
+      return { value: item.title, label: item.title }
+    })
+    this.searchList = this.tourList
+    this.test()
+  },
   methods: {
+    // 检索输入值
+    remoteMethod (query) {
+      if (query !== '') {
+        this.loading = true
+        setTimeout(() => {
+          this.loading = false
+          this.options = this.list.filter(item => {
+            return item.label.toLowerCase()
+              .indexOf(query.toLowerCase()) > -1
+          })
+        }, 200)
+      } else {
+        this.options = []
+      }
+    },
+    // 搜索景点
+    searchTourFn () {
+      this.searchList = this.tourList
+      this.searchList = this.searchList.filter(item => {
+        return item.title.toLowerCase()
+          .indexOf(this.searchValue.toLowerCase()) > -1
+      })
+    },
+    test () {
+      // let arr = [1, 2, 3, 4]
+      // let result = arr.find(i => i > 2)
+      // alert(result) // 输出3
+    }
   },
   components: {
     Header,
@@ -77,28 +184,81 @@ export default {
 
 <style lang="stylus" rel="stylesheet/stylus">
   .content {
-    .Promotional-language {
-      padding-top: 10px;
-      text-align: center;
-      p {
-        padding-left: 395px;
+    background-color:#f1f1f1;
+    .tour-warp {
+      width: 1024px;
+      margin: 20px auto 50px;
+      display: flex;
+      .left-item {
+        background: #fff;
+        margin: 10px 30px 15px 0;
+        .left-top {
+          margin-bottom: 10px;
+          border-bottom: 1px solid #e3e3e3;
+          text-align: center;
+          width: 200px;
+          p {
+            font-size: 22px;
+            letter-spacing: 2px
+          }
+        }
+        .left-search {
+          padding-bottom: 50px;
+          border-bottom: 1px solid #e3e3e3;
+          .el-select {
+            margin-top: 10px;
+          }
+          .el-button--primary {
+            margin-top: 20px;
+          }
+        }
+        ul {
+          width: 200px;
+          padding: 0;
+          margin-top: 30px;
+          li {
+            list-style: none;
+            margin-bottom: 15px;
+            padding: 0 30px;
+            display: flex;
+            .first {
+              margin-right: 10px;
+              border-radius: 50%;
+              width: 22px;
+              height: 22px;
+              text-align: center;
+            }
+          }
+        }
       }
-    }
-    .tour{
-      h2{
-        margin-left :200px;
-      }
-      p {
-        font-size: 16px;
-        line-height: 24px;
-        color: #333;
-        text-align: justify;
-        margin: 22px 200px ;
-      }
-      img {
-        display: block;
-        margin: 0 auto;
-        width: 500px;
+      .right-item {
+        background: #fff;
+        margin-top: 10px;
+        .Promotional-language {
+          padding-top: 10px;
+          text-align: center;
+          p {
+            padding-left: 395px;
+          }
+        }
+        .tour{
+          margin-bottom: 20px;
+          h2{
+            text-align: center;
+          }
+          p {
+            font-size: 16px;
+            line-height: 24px;
+            color: #333;
+            text-align: justify;
+            padding: 0 30px;
+          }
+          img {
+            display: block;
+            margin: 0 auto;
+            width: 500px;
+          }
+        }
       }
     }
     .foot_name {
